@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Remoiler</string>
+    <string name="fragment_schedule">לו\"ז</string>
+    <string name="fragment_switch">הדלקה/כיבוי</string>
+    <string name="status_change_msg">הבוילר כעת %s</string>
+    <string name="status_off">כבוי</string>
+    <string name="status_on">דלוק</string>
+</resources>

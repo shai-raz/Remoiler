@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Remoiler</string>
+
+    <!-- Tab Titles -->
+    <string name="fragment_switch">On/Off</string>
+    <string name="fragment_schedule">Schedule</string>
+
+    <!-- Status change message -->
+    <string name="status_on">ON</string>
+    <string name="status_off">OFF</string>
+    <string name="status_change_msg">The boiler is now %s!</string>
+</resources>

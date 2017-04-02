@@ -1,7 +1,6 @@
 package hu.pe.remoiler.remoiler;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +12,8 @@ public class ScheduleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        View viewRoot = inflater.inflate(R.layout.fragment_schedule, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_schedule, container, false);
 
-        return viewRoot;
+        return rootView;
     }
 }

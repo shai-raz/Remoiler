@@ -9,6 +9,11 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent" />
 
+    <TextView
+        android:id="@+id/temp_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -17,6 +22,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
-        />
+        android:src="@drawable/ic_add_white_48dp"/>
 
 </RelativeLayout>

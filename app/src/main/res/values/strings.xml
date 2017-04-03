@@ -1,5 +1,7 @@
 <resources>
+    <!-- Manifest -->
     <string name="app_name">Remoiler</string>
+    <string name="activity_schedule_editor_label">Schedule Editor</string>
 
     <!-- Tab Titles -->
     <string name="fragment_switch">On/Off</string>

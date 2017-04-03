@@ -6,4 +6,5 @@
     <string name="status_change_msg">הבוילר כעת %s</string>
     <string name="status_off">כבוי</string>
     <string name="status_on">דלוק</string>
+    <string name="activity_schedule_editor_label">עורך לו\"ז</string>
 </resources>

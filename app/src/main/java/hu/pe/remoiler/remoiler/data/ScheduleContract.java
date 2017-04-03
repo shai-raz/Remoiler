@@ -1,4 +1,4 @@
-package hu.pe.remoiler.remoiler;
+package hu.pe.remoiler.remoiler.data;
 
 
 import android.net.Uri;
@@ -29,16 +29,16 @@ public final class ScheduleContract {
      * looking at pet data. content://com.example.android.pets/staff/ will fail,
      * as the ContentProvider hasn't been given any information on what to do with "staff".
      */
-    public static final String SCHEDULE_PETS = "schedule";
+    public static final String PATH_SCHEDULE = "schedule";
 
     /**
      * Inner class that defines constant values for the pets database table.
      * Each entry in the table represents a single pet.
      */
 
-    private static abstract class ScheduleEntry implements BaseColumns {
+    public static abstract class ScheduleEntry implements BaseColumns {
         /** The content URI to access the pet data in the provider */
-        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, SCHEDULE_PETS);
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_SCHEDULE);
 
         /** Name of database table for pets */
         public final static String TABLE_NAME = "schedule";
@@ -67,7 +67,7 @@ public final class ScheduleContract {
         /**
          * Determines when will the event return.
          *
-         // TODO: Figure out how to use it, wither as an integer, an array, or maybe create a whole different table for that.
+         * TYPE: VARCHAR 15 (ARRAY OF 0/1 INTEGER [week])
          */
         public final static String COLUMN_SCHEDULE_RETURNS = "returns";
 
@@ -76,7 +76,7 @@ public final class ScheduleContract {
          *
          * TYPE: INTEGER
          */
-        public final static String COLUMN_SCHEDULE_RETURN = "active";
+        public final static String COLUMN_SCHEDULE_ACTIVE = "active";
 
     }
 }

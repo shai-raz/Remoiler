@@ -4,6 +4,12 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <!-- Tabs -->
+    <color name="tabs_bg_color">#3F51B5</color>
+    <color name="tabs_text_color">#dedede</color>
+    <color name="tabs_text_selected_color">#FFF</color>
+
+
     <!-- Schedule -->
     <color name="color_schedule_timer">#000</color>
 </resources>

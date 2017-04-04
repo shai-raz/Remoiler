@@ -7,4 +7,7 @@
     <string name="status_off">כבוי</string>
     <string name="status_on">דלוק</string>
     <string name="activity_schedule_editor_label">עורך לו\"ז</string>
+    <string name="schedule_end_time">נגמר ב:</string>
+    <string name="schedule_start_time">מתחיל ב:</string>
+    <string name="schedule_days_in_week">ימים בשבוע</string>
 </resources>

@@ -11,4 +11,9 @@
     <string name="status_on">ON</string>
     <string name="status_off">OFF</string>
     <string name="status_change_msg">The boiler is now %s!</string>
+
+    <!-- Schedule Layout -->
+    <string name="schedule_start_time">start time:</string>
+    <string name="schedule_end_time">end time:</string>
+    <string name="schedule_days_in_week">days in week:</string>
 </resources>

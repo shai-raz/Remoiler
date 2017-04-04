@@ -6,20 +6,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import hu.pe.remoiler.remoiler.data.ScheduleContract.ScheduleEntry;
 
-/**
- * Created by Shai on 03/04/2017.
- */
 
 public class ScheduleDbHelper extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "remoiler";
 
-    private static final String SQL_CREATE_ENTERIES = "CREATE TABLE" + ScheduleEntry.TABLE_NAME + "("
+    private static final String SQL_CREATE_ENTERIES = "CREATE TABLE " + ScheduleEntry.TABLE_NAME + "("
             + ScheduleEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + ScheduleEntry.COLUMN_SCHEDULE_START_TIME + " INTEGER DEFAULT 0,"
             + ScheduleEntry.COLUMN_SCHEDULE_END_TIME + " INTEGER DEFAULT 0,"
-            + ScheduleEntry.COLUMN_SCHEDULE_RETURNS + " VARCHAR 15 DEFAULT [0,0,0,0,0,0,0]"
+            + ScheduleEntry.COLUMN_SCHEDULE_RETURNS + " VARCHAR(17) DEFAULT [0,0,0,0,0,0,0],"
             + ScheduleEntry.COLUMN_SCHEDULE_ACTIVE + " INTEGER DEFAULT 1);";
 
     private static final String SQL_DELETE_ENTRIES = "DELETE TABLE IF EXISTS " + ScheduleEntry.TABLE_NAME;

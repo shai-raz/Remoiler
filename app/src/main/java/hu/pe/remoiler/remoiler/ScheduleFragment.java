@@ -80,7 +80,7 @@ public class ScheduleFragment extends Fragment {
         try {
             // Display the number of rows in the Cursor (which reflects the number of rows in the
             // pets table in the database).
-            displayView.setText("There are " + cursor.getCount() + " pets in the database.\n\n");
+            displayView.setText("There are " + cursor.getCount() + " scheduled events in the database.\n\n");
             displayView.append(ScheduleEntry._ID + " - " +
                     ScheduleEntry.COLUMN_SCHEDULE_START_TIME + " - " +
                     ScheduleEntry.COLUMN_SCHEDULE_END_TIME + " - " +

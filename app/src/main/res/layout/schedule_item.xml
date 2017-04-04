@@ -1,62 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="start time:"
-            android:textSize="@dimen/schedule_start_end_time_text"
-            android:textAllCaps="true"/>
+            android:orientation="vertical"
+            android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/schedule_start_time"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/schedule_start_time"
+                android:textSize="@dimen/schedule_start_end_time_text"
+                android:textAllCaps="true"/>
+
+            <TextView
+                android:id="@+id/schedule_start_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="07:00"
+                android:textSize="@dimen/schedule_time_text"
+                android:textColor="@color/color_schedule_timer" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="07:00"
-            android:textSize="@dimen/schedule_time_text"
-            android:textColor="@color/color_schedule_timer" />
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/schedule_end_time"
+                android:textSize="@dimen/schedule_start_end_time_text"
+                android:textAllCaps="true"/>
+
+            <TextView
+                android:id="@+id/schedule_end_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="08:00"
+                android:textSize="@dimen/schedule_time_text"
+                android:textColor="@color/color_schedule_timer" />
+
+        </LinearLayout>
+
+        <Switch
+            android:id="@+id/schedule_active_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            />
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="end time:"
-            android:textSize="@dimen/schedule_start_end_time_text"
+            android:text="@string/schedule_days_in_week"
+            android:textSize="12sp"
             android:textAllCaps="true"/>
 
         <TextView
-            android:id="@+id/schedule_end_time"
+            android:id="@+id/schedule_days_in_week"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="08:00"
-            android:textSize="@dimen/schedule_time_text"
-            android:textColor="@color/color_schedule_timer" />
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            tools:text="Sunday, Tuesday, Friday"/>
 
     </LinearLayout>
-
-    <Switch
-        android:id="@+id/schedule_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_gravity="center_vertical"/>
 
 </LinearLayout>

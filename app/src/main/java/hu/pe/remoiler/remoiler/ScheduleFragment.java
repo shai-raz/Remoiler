@@ -6,17 +6,22 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
-import hu.pe.remoiler.remoiler.data.ScheduleDbHelper;
 import hu.pe.remoiler.remoiler.data.ScheduleContract.ScheduleEntry;
+import hu.pe.remoiler.remoiler.data.ScheduleDbHelper;
 
 public class ScheduleFragment extends Fragment {
 
+    private static final String LOG_TAG = ScheduleFragment.class.getSimpleName();
+
     View rootView;
+    //ScheduleAdapter scheduleAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,7 +40,9 @@ public class ScheduleFragment extends Fragment {
             }
         });
 
-        displayDatabaseInfo();
+        populateList();
+
+        //displayDatabaseInfo();
 
         return rootView;
     }
@@ -43,6 +50,44 @@ public class ScheduleFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    private void populateList() {
+        // To access our database, we instantiate our subclass of SQLiteOpenHelper
+        // and pass the context, which is the current activity.
+        ScheduleDbHelper mDbHelper = new ScheduleDbHelper(getActivity());
+
+        // Create and/or open a database to read from it
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        // Columns to select
+        String[] projection = {
+                ScheduleEntry._ID,
+                ScheduleEntry.COLUMN_SCHEDULE_START_TIME,
+                ScheduleEntry.COLUMN_SCHEDULE_END_TIME,
+                ScheduleEntry.COLUMN_SCHEDULE_RETURNS,
+                ScheduleEntry.COLUMN_SCHEDULE_ACTIVE
+        };
+
+        // Perform this raw SQL query "SELECT * FROM pets"
+        // to get a Cursor that contains all rows from the pets table.
+        Cursor cursor = db.query(
+                ScheduleEntry.TABLE_NAME,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+
+        ListView listView = (ListView) rootView.findViewById(R.id.schedule_list_view);
+        ScheduleAdapter scheduleAdapter = new ScheduleAdapter(getActivity(), cursor, ScheduleAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        listView.setAdapter(scheduleAdapter);
+        Log.i(LOG_TAG, "Adapter has been set.");
+
+        cursor.close();
     }
 
     // Temporary database test
@@ -115,5 +160,7 @@ public class ScheduleFragment extends Fragment {
             cursor.close();
         }
     }
+
+
 
 }

@@ -16,7 +16,7 @@ public class ScheduleDbHelper extends SQLiteOpenHelper {
             + ScheduleEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + ScheduleEntry.COLUMN_SCHEDULE_START_TIME + " INTEGER DEFAULT 0,"
             + ScheduleEntry.COLUMN_SCHEDULE_END_TIME + " INTEGER DEFAULT 0,"
-            + ScheduleEntry.COLUMN_SCHEDULE_RETURNS + " VARCHAR(17) DEFAULT [0,0,0,0,0,0,0],"
+            + ScheduleEntry.COLUMN_SCHEDULE_RETURNS + " VARCHAR(15) DEFAULT [0,0,0,0,0,0,0],"
             + ScheduleEntry.COLUMN_SCHEDULE_ACTIVE + " INTEGER DEFAULT 1);";
 
     private static final String SQL_DELETE_ENTRIES = "DELETE TABLE IF EXISTS " + ScheduleEntry.TABLE_NAME;

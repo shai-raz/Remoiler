@@ -52,7 +52,7 @@ public class ScheduleAdapter extends CursorAdapter {
         String[] daysInWeekStringArray = daysInWeekCursor.split(",");
 
         // Convert array to int array
-        int[] daysInWeek = new int[8];
+        int[] daysInWeek = new int[7];
 
         for (int i = 0; i < 8; i++) {
             daysInWeek[i] = Integer.parseInt(daysInWeekStringArray[i]);

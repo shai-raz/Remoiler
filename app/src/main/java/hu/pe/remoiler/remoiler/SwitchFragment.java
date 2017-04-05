@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 public class SwitchFragment extends Fragment {
 
     // LOG TAG Constant
@@ -39,7 +41,7 @@ public class SwitchFragment extends Fragment {
         switchButton = (ImageView) rootView.findViewById(R.id.switch_button);
         vibe = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 
-        // TODO: Get current status from server and set status accordingly.
+        //status = new statusLoader().execute();
 
         setButtonByStatus();
 

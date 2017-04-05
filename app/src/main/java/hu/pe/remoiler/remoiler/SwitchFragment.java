@@ -1,18 +1,23 @@
 package hu.pe.remoiler.remoiler;
 
+import android.app.LoaderManager;
 import android.content.Context;
+import android.content.Loader;
+import android.net.Uri;
+import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
-import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-public class SwitchFragment extends Fragment {
+public class SwitchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Integer> {
 
     // LOG TAG Constant
     private final String LOG_TAG = SwitchFragment.class.getSimpleName();
@@ -26,10 +31,10 @@ public class SwitchFragment extends Fragment {
     private final int SWITCH_STATUS_ON = 1;
 
     // Status within the app, initiated to 0 (OFF)
-    private int status = 0;
+    private int mStatus = 0;
 
     // Switch Button ImageView
-    private ImageView switchButton;
+    private ImageButton switchButton;
 
     Vibrator vibe;
 
@@ -38,12 +43,12 @@ public class SwitchFragment extends Fragment {
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_switch, container, false);
 
-        switchButton = (ImageView) rootView.findViewById(R.id.switch_button);
+        switchButton = (ImageButton) rootView.findViewById(R.id.switch_button);
         vibe = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 
         //status = new statusLoader().execute();
 
-        setButtonByStatus();
+        //setButtonByStatus();
 
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,14 +61,18 @@ public class SwitchFragment extends Fragment {
 
         return rootView;
     }
+    
+    private void setStatus(int status) {
+        mStatus = status;
+    }
 
     private void changeStatus() {
-        status = 1 - status;
+        mStatus = 1 - mStatus;
         // TODO: update server with new status.
     }
 
     private void setButtonByStatus() {
-        if (status == SWITCH_STATUS_ON)
+        if (mStatus == SWITCH_STATUS_ON)
             switchButton.setImageResource(SWITCH_ON_BUTTON);
         else
             switchButton.setImageResource(SWITCH_OFF_BUTTON);
@@ -77,12 +86,54 @@ public class SwitchFragment extends Fragment {
     private String statusToText() {
         String statusText;
 
-        if (status == SWITCH_STATUS_OFF)
+        if (mStatus == SWITCH_STATUS_OFF)
             statusText = getString(R.string.status_off);
         else
             statusText = getString(R.string.status_on);
 
         return statusText;
 
+    }
+
+    @Override
+    public Loader<Integer> onCreateLoader(int id, Bundle args) {
+        return new StatusLoader(getActivity(), createStatusURL());
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Integer> loader, Integer status) {
+        setStatus(status);
+        setButtonByStatus();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Integer> loader) {
+
+    }
+
+    /* TRY OUT */
+    private URL createStatusURL() {
+        URL queryUrl = null;
+        final String BASE_SERVER_URL = "https://ad,mgadf,g";
+        Uri baseUri = Uri.parse(BASE_SERVER_URL);
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+
+        final String STATUS_PATH = "status";
+        // TODO: Get authkey from SharedPreferences.
+        String authKey = "7174113503d87e061a0be1e9989e45f2"; // md5(sha1(b7:30:cf:f1:7d:b4))
+
+        // Append path /status/{key}
+        uriBuilder.appendPath(STATUS_PATH);
+        uriBuilder.appendPath(authKey);
+
+        try {
+            queryUrl = new URL(String.valueOf(uriBuilder));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG, "Malformed URL.");
+        }
+
+        if (queryUrl == null) return null;
+        return queryUrl;
     }
 }

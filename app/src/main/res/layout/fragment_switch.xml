@@ -2,14 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
-    <ImageView
+    <ImageButton
         android:id="@+id/switch_button"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         tools:src="@drawable/switch_off_button"
-        android:clickable="true"/>
+        android:clickable="true"
+        android:contentDescription="Switch"
+        android:layout_centerInParent="true"
+        android:scaleType="fitCenter"/>
 
 </RelativeLayout>

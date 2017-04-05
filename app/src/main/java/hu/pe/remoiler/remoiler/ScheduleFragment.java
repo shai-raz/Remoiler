@@ -1,6 +1,8 @@
 package hu.pe.remoiler.remoiler;
 
+import android.app.LoaderManager;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -11,12 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import hu.pe.remoiler.remoiler.data.ScheduleContract.ScheduleEntry;
 import hu.pe.remoiler.remoiler.data.ScheduleDbHelper;
 
-public class ScheduleFragment extends Fragment {
+public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCallbacks<Integer> {
 
     private static final String LOG_TAG = ScheduleFragment.class.getSimpleName();
 
@@ -88,6 +89,21 @@ public class ScheduleFragment extends Fragment {
         Log.i(LOG_TAG, "Adapter has been set.");
 
         //cursor.close();
+    }
+
+    @Override
+    public Loader<Integer> onCreateLoader(int id, Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Integer> loader, Integer data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Integer> loader) {
+
     }
 
     // Temporary database test

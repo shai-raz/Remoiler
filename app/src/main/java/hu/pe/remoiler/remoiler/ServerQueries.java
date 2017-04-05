@@ -1,10 +1,5 @@
 package hu.pe.remoiler.remoiler;
 
-import android.net.Uri;
-import android.util.Log;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -24,7 +19,7 @@ final class ServerQueries {
      * Used to get current status from the server.
      * @return true/false -> on/off.
      */
-    public static int getStatus() throws IOException {
+    /*public static int getStatus() throws IOException {
         Uri baseUri = Uri.parse(BASE_SERVER_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
@@ -45,13 +40,11 @@ final class ServerQueries {
 
         Log.v(LOG_TAG, "Query URL: " + String.valueOf(queryUrl));
 
-        private
-
         //int status = new StatusTask().execute(queryUrl);
 
         /*String response = NetworkUtils.getStringFromURL(queryUrl);
 
         if (response != null && response.equals("1")) return 1;
-        return 0;*/
-    }
+        return 0;
+    }*/
 }

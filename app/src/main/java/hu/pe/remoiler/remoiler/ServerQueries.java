@@ -1,5 +1,9 @@
 package hu.pe.remoiler.remoiler;
 
+import android.net.Uri;
+import android.util.Log;
+
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -9,7 +13,7 @@ final class ServerQueries {
 
     private final static String LOG_TAG = ServerQueries.class.getSimpleName();
 
-    private static final String BASE_SERVER_URL = "https://remoiler.pe.hu";
+    private static final String BASE_SERVER_URL = "http://10.0.0.2/remoiler/public";
     private static URL queryUrl = null;
 
     // Uncallable constructor
@@ -20,16 +24,20 @@ final class ServerQueries {
      * @return true/false -> on/off.
      */
     /*public static int getStatus() throws IOException {
+        URL queryUrl = null;
+        final String BASE_SERVER_URL = "http://10.0.0.2/remoiler/public";
         Uri baseUri = Uri.parse(BASE_SERVER_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
         final String STATUS_PATH = "status";
         // TODO: Get authkey from SharedPreferences.
-        String authKey = "7174113503d87e061a0be1e9989e45f2"; // md5(sha1(b7:30:cf:f1:7d:b4))
+        String authKey = "shai"; // md5(sha1(b7:30:cf:f1:7d:b4))
 
         // Append path /status/{key}
         uriBuilder.appendPath(STATUS_PATH);
         uriBuilder.appendPath(authKey);
+
+        Log.i(LOG_TAG, "URL: " + String.valueOf(uriBuilder));
 
         try {
             queryUrl = new URL(String.valueOf(uriBuilder));
@@ -38,13 +46,38 @@ final class ServerQueries {
             Log.e(LOG_TAG, "Malformed URL.");
         }
 
-        Log.v(LOG_TAG, "Query URL: " + String.valueOf(queryUrl));
+        //Log.i(LOG_TAG, String.valueOf(queryUrl));
 
-        //int status = new StatusTask().execute(queryUrl);
-
-        /*String response = NetworkUtils.getStringFromURL(queryUrl);
-
-        if (response != null && response.equals("1")) return 1;
-        return 0;
+        if (queryUrl == null) return null;
+        return queryUrl;
     }*/
+
+    public static URL createURL(String path, String...params) {
+        Uri baseUri = Uri.parse(BASE_SERVER_URL);
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+
+        //Temporary Auth Key
+        String authKey = "raz";
+
+        uriBuilder.appendPath(path);
+        uriBuilder.appendPath(authKey);
+
+        switch (path) {
+            case "status":
+                break;
+            case "change_status":
+                uriBuilder.appendPath(params[0]);
+                break;
+        }
+
+        try {
+            queryUrl = new URL(String.valueOf(uriBuilder));
+        } catch (MalformedURLException e) {
+            Log.e(LOG_TAG, "Malformed URL.");
+            e.printStackTrace();
+        }
+
+        if (queryUrl == null) return null;
+        return queryUrl;
+    }
 }

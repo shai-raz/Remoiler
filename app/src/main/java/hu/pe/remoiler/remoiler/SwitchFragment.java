@@ -1,17 +1,18 @@
 package hu.pe.remoiler.remoiler;
 
-import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Loader;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.net.MalformedURLException;
@@ -34,8 +35,10 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
     private int mStatus = 0;
 
     // Switch Button ImageView
-    private ImageButton switchButton;
+    private ImageView switchButton;
 
+    private LoaderManager loaderManager;
+    private ConnectivityManager cm;
     Vibrator vibe;
 
     @Override
@@ -43,7 +46,7 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_switch, container, false);
 
-        switchButton = (ImageButton) rootView.findViewById(R.id.switch_button);
+        switchButton = (ImageView) rootView.findViewById(R.id.switch_button);
         vibe = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 
         //status = new statusLoader().execute();
@@ -59,6 +62,15 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
             }
         });
 
+        cm =  (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        loaderManager = getLoaderManager();
+        if (cm.getActiveNetworkInfo() != null)
+                loaderManager.initLoader(1, null, this);
+
+        /*else {
+            // wallak lo yodea ahsheleno
+        }*/
+
         return rootView;
     }
     
@@ -68,6 +80,7 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
 
     private void changeStatus() {
         mStatus = 1 - mStatus;
+        //ServerQueries.createURL("change_status", "0");
         // TODO: update server with new status.
     }
 
@@ -96,44 +109,21 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     @Override
-    public Loader<Integer> onCreateLoader(int id, Bundle args) {
-        return new StatusLoader(getActivity(), createStatusURL());
+    public android.support.v4.content.Loader<Integer> onCreateLoader(int id, Bundle args) {
+        return new StatusLoader(getActivity(), ServerQueries.createURL("status"));
     }
 
     @Override
-    public void onLoadFinished(Loader<Integer> loader, Integer status) {
+    public void onLoadFinished(android.support.v4.content.Loader<Integer> loader, Integer status) {
+        Log.i(LOG_TAG, "onLoadFinished");
+        Log.i(LOG_TAG, "status: " + status);
         setStatus(status);
         setButtonByStatus();
     }
 
     @Override
-    public void onLoaderReset(Loader<Integer> loader) {
+    public void onLoaderReset(android.support.v4.content.Loader<Integer> loader) {
 
     }
 
-    /* TRY OUT */
-    private URL createStatusURL() {
-        URL queryUrl = null;
-        final String BASE_SERVER_URL = "https://ad,mgadf,g";
-        Uri baseUri = Uri.parse(BASE_SERVER_URL);
-        Uri.Builder uriBuilder = baseUri.buildUpon();
-
-        final String STATUS_PATH = "status";
-        // TODO: Get authkey from SharedPreferences.
-        String authKey = "7174113503d87e061a0be1e9989e45f2"; // md5(sha1(b7:30:cf:f1:7d:b4))
-
-        // Append path /status/{key}
-        uriBuilder.appendPath(STATUS_PATH);
-        uriBuilder.appendPath(authKey);
-
-        try {
-            queryUrl = new URL(String.valueOf(uriBuilder));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            Log.e(LOG_TAG, "Malformed URL.");
-        }
-
-        if (queryUrl == null) return null;
-        return queryUrl;
-    }
 }

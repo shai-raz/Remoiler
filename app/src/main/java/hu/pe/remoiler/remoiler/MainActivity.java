@@ -81,5 +81,7 @@ public class MainActivity extends AppCompatActivity {
         else
             Toast.makeText(this, "Problem adding dummy data", Toast.LENGTH_SHORT).show();
 
+        //db.close();
+
     }
 }

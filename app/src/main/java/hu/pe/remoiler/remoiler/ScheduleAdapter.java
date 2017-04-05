@@ -2,6 +2,7 @@ package hu.pe.remoiler.remoiler;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,8 @@ import android.widget.TextView;
 
 public class ScheduleAdapter extends CursorAdapter {
 
-    public ScheduleAdapter(Context context, Cursor c, int flags) {
-        super(context, c, flags);
+    public ScheduleAdapter(Context context, Cursor c) {
+        super(context, c, 0);
     }
 
     // Set the layout we'll be using as the item view
@@ -28,7 +29,7 @@ public class ScheduleAdapter extends CursorAdapter {
         // Declare all widgets in the layout
         TextView startTimeTv = (TextView) view.findViewById(R.id.schedule_start_time);
         TextView endTimeTv = (TextView) view.findViewById(R.id.schedule_end_time);
-        Switch activeSwitch = (Switch) view.findViewById(R.id.schedule_active_switch);
+        SwitchCompat activeSwitch = (SwitchCompat) view.findViewById(R.id.schedule_active_switch);
         TextView daysInWeekTv = (TextView) view.findViewById(R.id.schedule_days_in_week);
 
         // Extract from Cursor
@@ -38,13 +39,8 @@ public class ScheduleAdapter extends CursorAdapter {
         String daysInWeekCursor = cursor.getString(cursor.getColumnIndex("returns"));
 
         // Redefine extracted information
-        int startTimeHour = startTimeCursor/60;
-        int startTimeMin = startTimeCursor%60;
-        String startTime = startTimeHour + ":" + startTimeMin;
-
-        int endTimeHour = endTimeCursor/60;
-        int endTimeMin = endTimeCursor%60;
-        String endTime = endTimeHour + ":" + endTimeMin;
+        String startTime = minutesInDayToTime(startTimeCursor);
+        String endTime = minutesInDayToTime(endTimeCursor);
 
         // Create an array of days
         daysInWeekCursor = daysInWeekCursor.replace("[","");
@@ -54,7 +50,7 @@ public class ScheduleAdapter extends CursorAdapter {
         // Convert array to int array
         int[] daysInWeek = new int[7];
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 7; i++) {
             daysInWeek[i] = Integer.parseInt(daysInWeekStringArray[i]);
         }
 
@@ -66,6 +62,23 @@ public class ScheduleAdapter extends CursorAdapter {
     }
 
     /**
+     * Converts minutes in day to Hours:Minutes
+     * @param time Minutes in day
+     * @return String in format of Hours:Minutes
+     */
+    private String minutesInDayToTime(int time) {
+        String hours = String.valueOf(time/60);
+        String minutes = String.valueOf(time%60);
+
+        if (hours.length() == 1)
+            hours = "0" + hours;
+        if (minutes.length() == 1)
+            minutes = "0" + minutes;
+
+        return hours + ":" + minutes;
+    }
+
+    /**
      *
      * @param daysInWeek Week int array with 1s and 0s
      * @return String of active days and their names
@@ -73,7 +86,7 @@ public class ScheduleAdapter extends CursorAdapter {
     private String intArrayDaysToString (int[] daysInWeek) {
         String daysInWeekString = "";
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 7; i++) {
             switch (daysInWeek[i]) {
                 case 1:
                     daysInWeekString += intToDayInWeek(i) + " ";
@@ -82,6 +95,7 @@ public class ScheduleAdapter extends CursorAdapter {
 
         return daysInWeekString;
     }
+
     // TODO: Make dynamic string
     private String intToDayInWeek (int day) {
         switch (day) {

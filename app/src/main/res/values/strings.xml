@@ -15,5 +15,5 @@
     <!-- Schedule Layout -->
     <string name="schedule_start_time">start time:</string>
     <string name="schedule_end_time">end time:</string>
-    <string name="schedule_days_in_week">days in week:</string>
+    <string name="schedule_days_in_week">returns:</string>
 </resources>

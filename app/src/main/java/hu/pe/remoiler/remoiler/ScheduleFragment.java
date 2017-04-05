@@ -83,15 +83,15 @@ public class ScheduleFragment extends Fragment {
 
 
         ListView listView = (ListView) rootView.findViewById(R.id.schedule_list_view);
-        ScheduleAdapter scheduleAdapter = new ScheduleAdapter(getActivity(), cursor, ScheduleAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        ScheduleAdapter scheduleAdapter = new ScheduleAdapter(getActivity(), cursor);
         listView.setAdapter(scheduleAdapter);
         Log.i(LOG_TAG, "Adapter has been set.");
 
-        cursor.close();
+        //cursor.close();
     }
 
     // Temporary database test
-    private void displayDatabaseInfo() {
+    /*private void displayDatabaseInfo() {
         // To access our database, we instantiate our subclass of SQLiteOpenHelper
         // and pass the context, which is the current activity.
         ScheduleDbHelper mDbHelper = new ScheduleDbHelper(getActivity());
@@ -159,7 +159,7 @@ public class ScheduleFragment extends Fragment {
             // resources and makes it invalid.
             cursor.close();
         }
-    }
+    }*/
 
 
 

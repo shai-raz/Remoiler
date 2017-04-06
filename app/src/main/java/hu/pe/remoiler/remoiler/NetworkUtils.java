@@ -20,6 +20,40 @@ public final class NetworkUtils {
     // Uncallable constructor
     private NetworkUtils() {}
 
+    static boolean executeURL(URL queryUrl) throws IOException {
+        HttpURLConnection urlConnection = null;
+        InputStream inputStream = null;
+
+        try {
+            // Making the connection with the URL, using "GET" request method
+            urlConnection = (HttpURLConnection) queryUrl.openConnection();
+            urlConnection.setReadTimeout(3000);
+            urlConnection.setConnectTimeout(3000);
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+
+            // Checking if the response code is OK
+            if (urlConnection.getResponseCode() != 200) {
+                Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
+                return false;
+            }
+
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Problem retrieving the data from server.", e);
+            return false;
+        }
+        finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        }
+
+        return true;
+    }
+
     // Returns json String from given URL
     public static String getStringFromURL(URL queryUrl) throws IOException {
         HttpURLConnection urlConnection = null;

@@ -52,7 +52,7 @@ final class ServerQueries {
         return queryUrl;
     }*/
 
-    public static URL createURL(String path, String...params) {
+    static URL createURL(String path, String... params) {
         Uri baseUri = Uri.parse(BASE_SERVER_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 

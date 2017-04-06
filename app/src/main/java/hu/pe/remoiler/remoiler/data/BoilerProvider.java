@@ -7,13 +7,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-public class ScheduleProvider extends ContentProvider {
+public class BoilerProvider extends ContentProvider {
+    /** URI matcher code for the content URI for the boiler table */
+    private static final int BOILER = 200;
 
-    /** URI matcher code for the content URI for the schedule table */
-    private static final int SCHEDULE = 100;
-
-    /** URI matcher code for the content URI for a single 'timer' in the schedule table */
-    private static final int SCHEDULE_ID = 101;
+    /** URI matcher code for the content URI for a single 'boiler' in the boiler table */
+    private static final int BOILER_ID = 201;
 
     /**
      * UriMatcher object to match a content URI to a corresponding code.
@@ -28,21 +27,21 @@ public class ScheduleProvider extends ContentProvider {
         // should recognize. All paths added to the UriMatcher have a corresponding code to return
         // when a match is found.
 
-        sUriMatcher.addURI(ScheduleContract.CONTENT_AUTHORITY, ScheduleContract.PATH_SCHEDULE, SCHEDULE);
-        sUriMatcher.addURI(ScheduleContract.CONTENT_AUTHORITY, ScheduleContract.PATH_SCHEDULE + "/#", SCHEDULE_ID);
+        sUriMatcher.addURI(BoilerContract.CONTENT_AUTHORITY, BoilerContract.PATH_BOILER, BOILER);
+        sUriMatcher.addURI(BoilerContract.CONTENT_AUTHORITY, BoilerContract.PATH_BOILER + "/#", BOILER_ID);
     }
 
     // Tag for the log messages
-    public static final String LOG_TAG = ScheduleProvider.class.getSimpleName();
+    public static final String LOG_TAG = BoilerProvider.class.getSimpleName();
 
     /**
      * Database helper object.
      */
-    private ScheduleDbHelper mDbHelper;
+    private BoilerDbHelper mDbHelper;
 
     @Override
     public boolean onCreate() {
-        mDbHelper = new ScheduleDbHelper(getContext());
+        mDbHelper = new BoilerDbHelper(getContext());
         return true;
     }
 

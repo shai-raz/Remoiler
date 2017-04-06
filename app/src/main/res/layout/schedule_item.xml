@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 tools:text="07:00"
                 android:textSize="@dimen/schedule_time_text"
-                android:textColor="@color/color_schedule_timer" />
+                android:textColor="@color/schedule_timer_color" />
 
         </LinearLayout>
 
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 tools:text="08:00"
                 android:textSize="@dimen/schedule_time_text"
-                android:textColor="@color/color_schedule_timer" />
+                android:textColor="@color/schedule_timer_color" />
 
         </LinearLayout>
 

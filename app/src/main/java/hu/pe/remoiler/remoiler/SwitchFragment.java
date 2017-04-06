@@ -67,10 +67,6 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
         if (cm.getActiveNetworkInfo() != null)
                 loaderManager.initLoader(1, null, this);
 
-        /*else {
-            // wallak lo yodea ahsheleno
-        }*/
-
         return rootView;
     }
     
@@ -80,6 +76,10 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
 
     private void changeStatus() {
         mStatus = 1 - mStatus;
+
+        // Update server with new status @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        /*ChangeStatusTask changeStatusTask = new ChangeStatusTask();
+        changeStatusTask.execute(String.valueOf(mStatus));*/
         //ServerQueries.createURL("change_status", "0");
         // TODO: update server with new status.
     }

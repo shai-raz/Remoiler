@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="activity_margin">16dp</dimen>
+
     <dimen name="schedule_time_text">42sp</dimen>
     <dimen name="schedule_start_end_time_text">11sp</dimen>
 </resources>

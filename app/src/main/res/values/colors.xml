@@ -14,5 +14,5 @@
     <color name="schedule_timer_color">#000</color>
 
     <!-- Boiler Editor -->
-    <color name="boiler_editor_name_color">#242424</color>
+    <color name="boiler_editor_name_color">#333333</color>
 </resources>

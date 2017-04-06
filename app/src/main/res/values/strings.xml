@@ -21,6 +21,7 @@
     <!-- Boiler Editor -->
     <string name="boiler_editor_general">General</string>
     <string name="boiler_editor_hint_name">Name</string>
-    <string name="boiler_editor_hint_key">Key</string>
+    <string name="boiler_editor_hint_username">Username</string>
     <string name="boiler_editor_hint_password">Password</string>
+    <string name="boiler_editor_error_fill_all_fields">Please fill in all fields.</string>
 </resources>

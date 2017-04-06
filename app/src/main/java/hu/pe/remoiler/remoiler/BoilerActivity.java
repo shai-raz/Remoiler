@@ -63,7 +63,7 @@ public class BoilerActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // Temporary insert test
+           // Temporary insert test
     private void insertDummyData() {
         ScheduleDbHelper mDbHelper = new ScheduleDbHelper(this);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();

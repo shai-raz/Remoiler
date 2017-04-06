@@ -11,7 +11,9 @@
     <string name="schedule_start_time">מתחיל ב:</string>
     <string name="schedule_days_in_week">חוזר:</string>
     <string name="boiler_editor_general">כללי</string>
-    <string name="boiler_editor_hint_key">מפתח</string>
     <string name="boiler_editor_hint_name">שם</string>
     <string name="boiler_editor_hint_password">סיסמא</string>
+    <string name="boiler_editor_hint_username">שם משתמש</string>
+    <string name="activity_boiler_editor_label">עורך בוילר</string>
+    <string name="boiler_editor_error_fill_all_fields">אנא מלא את כל השדות</string>
 </resources>

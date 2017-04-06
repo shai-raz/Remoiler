@@ -80,4 +80,11 @@ final class ServerQueries {
         if (queryUrl == null) return null;
         return queryUrl;
     }
+
+    static String getAuthKeyByUserPass(String user, String pass) {
+        // TODO: get key from server
+
+        // Temporary return
+        return "raz";
+    }
 }

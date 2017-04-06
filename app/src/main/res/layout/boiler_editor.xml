@@ -43,8 +43,8 @@
 
         <!-- Key field -->
         <EditText
-            android:id="@+id/boiler_key_edit"
-            android:hint="@string/boiler_editor_hint_key"
+            android:id="@+id/boiler_username_edit"
+            android:hint="@string/boiler_editor_hint_username"
             android:inputType="textCapWords"
             style="@style/EditorFieldStyle" />
 

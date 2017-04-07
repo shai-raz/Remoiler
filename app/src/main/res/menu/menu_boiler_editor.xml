@@ -6,7 +6,7 @@
 
     <item
         android:id="@+id/action_save"
-        android:title="save"
+        android:title="@string/boiler_editor_menu_save"
         app:showAsAction="always" />
 
 </menu>

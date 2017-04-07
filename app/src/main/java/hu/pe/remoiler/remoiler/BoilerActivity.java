@@ -16,10 +16,18 @@ import hu.pe.remoiler.remoiler.data.ScheduleDbHelper;
 
 public class BoilerActivity extends AppCompatActivity {
 
+    String boilerName = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_boiler);
+
+        /*if (getIntent().getExtras() != null) {
+            boilerName = getIntent().getStringExtra("name");
+
+            //nameEdit.setText(boilerName, TextView.BufferType.EDITABLE);
+        }*/
 
         // Create the ViewPager object
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -63,10 +71,16 @@ public class BoilerActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-           // Temporary insert test
+    // Temporary insert test
     private void insertDummyData() {
         ScheduleDbHelper mDbHelper = new ScheduleDbHelper(this);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        /*
+         * TODO: Create a Dbhelper/dbprovider for both tables.
+         * -> because right now only the first table is being created (boiler table),
+         * and schedule isn't, so it's causing an error.
+         */
 
         ContentValues values = new ContentValues();
         values.put(ScheduleEntry.COLUMN_SCHEDULE_START_TIME, 420);
@@ -81,7 +95,6 @@ public class BoilerActivity extends AppCompatActivity {
         else
             Toast.makeText(this, "Problem adding dummy data", Toast.LENGTH_SHORT).show();
 
-        //db.close();
-
+        db.close();
     }
 }

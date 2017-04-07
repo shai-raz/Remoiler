@@ -3,9 +3,14 @@ package hu.pe.remoiler.remoiler.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
 import hu.pe.remoiler.remoiler.data.BoilerContract.BoilerEntry;
 
 public class BoilerDbHelper extends SQLiteOpenHelper {
+
+    private static final String LOG_TAG = BoilerDbHelper.class.getSimpleName();
+
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "remoiler";
 
@@ -23,6 +28,7 @@ public class BoilerDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_ENTRIES);
+        Log.i(LOG_TAG, "Table" + BoilerEntry.TABLE_NAME + " was created.");
     }
 
     @Override

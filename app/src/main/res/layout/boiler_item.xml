@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/activity_margin"
-    android:paddingBottom="@dimen/activity_margin"
+    android:padding="@dimen/activity_margin"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground">
 

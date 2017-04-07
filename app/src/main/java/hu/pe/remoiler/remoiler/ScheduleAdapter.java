@@ -7,14 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.Switch;
 import android.widget.TextView;
 
 
 public class ScheduleAdapter extends CursorAdapter {
 
+    Context mContext;
+
     public ScheduleAdapter(Context context, Cursor c) {
         super(context, c, 0);
+        mContext = context;
     }
 
     // Set the layout we'll be using as the item view
@@ -96,23 +98,23 @@ public class ScheduleAdapter extends CursorAdapter {
         return daysInWeekString;
     }
 
-    // TODO: Make dynamic string
+    // TODO: check if dynamic string works
     private String intToDayInWeek (int day) {
         switch (day) {
             case 1:
-                return "Sunday";
+                return mContext.getString(R.string.schedule_sunday);
             case 2:
-                return "Monday";
+                return mContext.getString(R.string.schedule_monday);
             case 3:
-                return "Tuesday";
+                return mContext.getString(R.string.schedule_tuesday);
             case 4:
-                return "Wednesday";
+                return mContext.getString(R.string.schedule_wednesday);
             case 5:
-                return "Thursday";
+                return mContext.getString(R.string.schedule_thursday);
             case 6:
-                return "Friday";
+                return mContext.getString(R.string.schedule_friday);
             case 7:
-                return "Saturday";
+                return mContext.getString(R.string.schedule_saturday);
         }
         return "";
     }

@@ -48,11 +48,13 @@
             android:inputType="textCapWords"
             style="@style/EditorFieldStyle" />
 
-        <!-- Key field -->
+        <!-- Password field -->
         <EditText
             android:id="@+id/boiler_password_edit"
             android:hint="@string/boiler_editor_hint_password"
             android:inputType="textPassword"
+            android:textAlignment="viewStart"
+            android:layout_gravity="start"
             style="@style/EditorFieldStyle" />
     </LinearLayout>
 

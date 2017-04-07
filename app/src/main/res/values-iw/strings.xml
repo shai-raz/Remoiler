@@ -16,4 +16,12 @@
     <string name="boiler_editor_hint_username">שם משתמש</string>
     <string name="activity_boiler_editor_label">עורך בוילר</string>
     <string name="boiler_editor_error_fill_all_fields">אנא מלא את כל השדות</string>
+    <string name="boiler_editor_menu_save">שמור</string>
+    <string name="schedule_friday">שישי</string>
+    <string name="schedule_monday">שני</string>
+    <string name="schedule_saturday">שבת</string>
+    <string name="schedule_sunday">ראשון</string>
+    <string name="schedule_thursday">חמישי</string>
+    <string name="schedule_tuesday">שלישי</string>
+    <string name="schedule_wednesday">רביעי</string>
 </resources>

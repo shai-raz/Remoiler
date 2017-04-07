@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        // Setting OnClickListener on the Floating button that will direct to the Schedule Editor
+        // Setting OnClickListener on the Floating button that will direct to the Boiler Editor
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
         else
             Toast.makeText(this, "Problem adding dummy data", Toast.LENGTH_SHORT).show();
 
-        //db.close();
-
+        db.close();
     }
 }

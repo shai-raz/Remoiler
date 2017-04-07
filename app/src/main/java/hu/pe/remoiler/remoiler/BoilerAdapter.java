@@ -45,14 +45,14 @@ public class BoilerAdapter extends CursorAdapter {
             }
         });
 
-        /*view.setOnClickListener(new View.OnClickListener() {
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, BoilerActivity.class);
-                intent.putExtra("name", boilerName);
+                //intent.putExtra("name", boilerName);
                 context.startActivity(intent);
             }
-        });*/
+        });
 
     }
 }

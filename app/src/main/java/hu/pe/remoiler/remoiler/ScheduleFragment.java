@@ -41,7 +41,7 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
             }
         });
 
-        populateList();
+        //populateList();
 
         //displayDatabaseInfo();
 
@@ -57,9 +57,11 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
         // To access our database, we instantiate our subclass of SQLiteOpenHelper
         // and pass the context, which is the current activity.
         ScheduleDbHelper mDbHelper = new ScheduleDbHelper(getActivity());
+        Log.i(LOG_TAG, "mDbHelper created");
 
         // Create and/or open a database to read from it
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Log.i(LOG_TAG, "SqLiteDatabase created");
 
         // Columns to select
         String[] projection = {

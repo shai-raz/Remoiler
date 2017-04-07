@@ -51,6 +51,14 @@ public final class ScheduleContract {
         public final static String _ID = BaseColumns._ID;
 
         /**
+         * The ID of the boiler this schedule is used for.
+         *
+         * TYPE: INTEGER
+         */
+
+        public final static String COLUMN_SCHEDULE_BOILER_ID = "boiler_id";
+
+        /**
          * Boiler's Start time
          *
          * TYPE: INTEGER

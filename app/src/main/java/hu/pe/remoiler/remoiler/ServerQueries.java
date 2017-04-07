@@ -13,7 +13,7 @@ final class ServerQueries {
 
     private final static String LOG_TAG = ServerQueries.class.getSimpleName();
 
-    private static final String BASE_SERVER_URL = "http://10.0.0.2/remoiler/public";
+    private static final String BASE_SERVER_URL = "http://locahost/remoiler/public";
     private static URL queryUrl = null;
 
     // Uncallable constructor

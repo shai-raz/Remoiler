@@ -13,7 +13,7 @@ final class ServerQueries {
 
     private final static String LOG_TAG = ServerQueries.class.getSimpleName();
 
-    private static final String BASE_SERVER_URL = "http://locahost/remoiler/public";
+    private static final String BASE_SERVER_URL = "http://localhost/remoiler/public";
     private static URL queryUrl = null;
 
     // Uncallable constructor
@@ -30,7 +30,7 @@ final class ServerQueries {
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
         final String STATUS_PATH = "status";
-        // TODO: Get authkey from SharedPreferences.
+        TODO: Get authkey from SharedPreferences.
         String authKey = "shai"; // md5(sha1(b7:30:cf:f1:7d:b4))
 
         // Append path /status/{key}

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/activity_margin"
     android:clickable="true"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:foreground="?attr/selectableItemBackground">
 
     <ImageView
         android:id="@+id/boiler_icon_hot"

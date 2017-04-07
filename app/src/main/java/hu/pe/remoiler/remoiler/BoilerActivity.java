@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import hu.pe.remoiler.remoiler.data.ScheduleContract.ScheduleEntry;
-import hu.pe.remoiler.remoiler.data.ScheduleDbHelper;
+import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
 
 public class BoilerActivity extends AppCompatActivity {
 
@@ -73,7 +73,7 @@ public class BoilerActivity extends AppCompatActivity {
 
     // Temporary insert test
     private void insertDummyData() {
-        ScheduleDbHelper mDbHelper = new ScheduleDbHelper(this);
+        RemoilerDbHelper mDbHelper = new RemoilerDbHelper(this);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         /*

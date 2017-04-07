@@ -37,11 +37,11 @@ public class BoilerProvider extends ContentProvider {
     /**
      * Database helper object.
      */
-    private BoilerDbHelper mDbHelper;
+    private RemoilerDbHelper mDbHelper;
 
     @Override
     public boolean onCreate() {
-        mDbHelper = new BoilerDbHelper(getContext());
+        mDbHelper = new RemoilerDbHelper(getContext());
         return true;
     }
 

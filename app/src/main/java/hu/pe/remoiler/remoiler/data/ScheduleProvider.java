@@ -38,11 +38,11 @@ public class ScheduleProvider extends ContentProvider {
     /**
      * Database helper object.
      */
-    private ScheduleDbHelper mDbHelper;
+    private RemoilerDbHelper mDbHelper;
 
     @Override
     public boolean onCreate() {
-        mDbHelper = new ScheduleDbHelper(getContext());
+        mDbHelper = new RemoilerDbHelper(getContext());
         return true;
     }
 

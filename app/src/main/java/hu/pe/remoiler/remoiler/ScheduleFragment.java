@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import hu.pe.remoiler.remoiler.data.ScheduleContract.ScheduleEntry;
-import hu.pe.remoiler.remoiler.data.ScheduleDbHelper;
+import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
 
 public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCallbacks<Integer> {
 
@@ -41,7 +41,7 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
             }
         });
 
-        //populateList();
+        populateList();
 
         //displayDatabaseInfo();
 
@@ -56,7 +56,7 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
     private void populateList() {
         // To access our database, we instantiate our subclass of SQLiteOpenHelper
         // and pass the context, which is the current activity.
-        ScheduleDbHelper mDbHelper = new ScheduleDbHelper(getActivity());
+        RemoilerDbHelper mDbHelper = new RemoilerDbHelper(getActivity());
         Log.i(LOG_TAG, "mDbHelper created");
 
         // Create and/or open a database to read from it
@@ -112,7 +112,7 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
     /*private void displayDatabaseInfo() {
         // To access our database, we instantiate our subclass of SQLiteOpenHelper
         // and pass the context, which is the current activity.
-        ScheduleDbHelper mDbHelper = new ScheduleDbHelper(getActivity());
+        RemoilerDbHelper mDbHelper = new RemoilerDbHelper(getActivity());
 
         // Create and/or open a database to read from it
         SQLiteDatabase db = mDbHelper.getReadableDatabase();

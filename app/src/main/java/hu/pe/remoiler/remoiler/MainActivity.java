@@ -14,7 +14,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import hu.pe.remoiler.remoiler.data.BoilerContract.BoilerEntry;
-import hu.pe.remoiler.remoiler.data.BoilerDbHelper;
+import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private void populateList() {
         // To access our database, we instantiate our subclass of SQLiteOpenHelper
         // and pass the context, which is the current activity.
-        BoilerDbHelper mDbHelper = new BoilerDbHelper(this);
+        RemoilerDbHelper mDbHelper = new RemoilerDbHelper(this);
 
         // Create and/or open a database to read from it
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void insertDummyData() {
-        BoilerDbHelper mDbHelper = new BoilerDbHelper(this);
+        RemoilerDbHelper mDbHelper = new RemoilerDbHelper(this);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="NumberPickerView">
+        <attr name="npv_ShowCount" format="reference|integer" />//the count of shown items , default is 3
+        <attr name="npv_ShowDivider" format="reference|boolean" />//if show dividers
+        <attr name="npv_DividerColor" format="reference|color" />//color of two dividers
+        <attr name="npv_DividerMarginLeft" format="reference|dimension" />//divider's margin to the left
+        <attr name="npv_DividerMarginRight" format="reference|dimension" />//divider's margin to the right
+        <attr name="npv_DividerHeight" format="reference|dimension" />//divider's height
+        <attr name="npv_TextColorNormal" format="reference|color" />//unselected textColor
+        <attr name="npv_TextColorSelected" format="reference|color" />//selected textColor
+        <attr name="npv_TextColorHint" format="reference|color" />//hint text color (the text in the center item)
+        <attr name="npv_TextSizeNormal" format="reference|dimension" />//unselected textSize
+        <attr name="npv_TextSizeSelected" format="reference|dimension" />//selected textColor
+        <attr name="npv_TextSizeHint" format="reference|dimension" />//hint text size
+        <attr name="npv_TextArray" format="reference" />//displayedValues
+        <attr name="npv_MinValue" format="reference|integer" />//minValue, see as setMinValue()
+        <attr name="npv_MaxValue" format="reference|integer" />//maxValue, see as setMaxValue()
+        <attr name="npv_WrapSelectorWheel" format="reference|boolean" />//if set wrap mode, see as setWrapSelectorWheel(boolean)
+        <attr name="npv_HintText" format="reference|string" />//hint text
+        <attr name="npv_EmptyItemHint" format="reference|string" />//empty item's text,only shown when WrapSelectorWheel==false or displayedValues length not large than showCount
+        <attr name="npv_MarginStartOfHint" format="reference|dimension" />//distance between hint and the right side of the max wide text in displayedValues
+        <attr name="npv_MarginEndOfHint" format="reference|dimension" />//distance between hint and the right side of the view
+        <attr name="npv_ItemPaddingHorizontal" format="reference|dimension" />//item's horizontal padding, used for wrap_content mode
+        <attr name="npv_ItemPaddingVertical" format="reference|dimension" />//item's vertical padding, used for wrap_content mode
+        <attr name="npv_RespondChangeOnDetached" format="reference|boolean" />//for reusable `Dialog/PopupWindow`.
+        //If `Dialog/PopupWindow` is hiding meanwhile `NumberPickerView` is still scrolling, then we need it to stop scrolling
+        //and respond (or not) `OnValueChange` callbacks and change the previous picked value.
+        //Add a new attr `npv_RespondChangeOnDetached` as a flag to set if respondding `onValueChange` callbacks,
+        //mainly for multi linked NumberPickerViews to correct other NumberPickerView's position or value.
+        //But I highly recommend every time showing a `Dialog/PopupWindow` please set certain data for NumberPickerView,
+        //and set `npv_RespondChangeOnDetached` false to avoid respondding `onValueChange` callbacks.
+        //See dialog in my `GregorianLunarCalendar` project.
+
+        <attr name="npv_RespondChangeInMainThread" format="reference|boolean" />//set if the `onValueChanged` callbacks invoked
+        // in mainThread or in subThread, default is true, in mainThread. set it false if you want to run `onValueChanged` in
+        // subThread.
+
+        //these attibutes below are used under wrap_content mode,
+        //and if you want to change displayedValues with out making NumberPickerView changing its original position(four points of this view),
+        //then you should added these attrs to set a max width
+        <!--just used to measure maxWidth for wrap_content without hint,
+            the string array will never be displayed.
+            you can set this attr if you want to keep the wraped numberpickerview
+            width unchanged when alter the content list-->
+        <attr name="npv_AlternativeTextArrayWithMeasureHint" format="reference" />//represents the maxWidth of displayedValues item plus hint width, including hint, the maxWidth used in onMeasure fuction must equal or be larger than this
+        <attr name="npv_AlternativeTextArrayWithoutMeasureHint" format="reference" />//represents the maxWidth of displayedValues item, exclude hint text.
+        <!--the max length of hint content-->
+        <attr name="npv_AlternativeHint" format="reference|string" />//represents the maxWidth of hint text
+    </declare-styleable>
+</resources>

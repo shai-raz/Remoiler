@@ -76,12 +76,6 @@ public class BoilerActivity extends AppCompatActivity {
         RemoilerDbHelper mDbHelper = new RemoilerDbHelper(this);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
-        /*
-         * TODO: Create a Dbhelper/dbprovider for both tables.
-         * -> because right now only the first table is being created (boiler table),
-         * and schedule isn't, so it's causing an error.
-         */
-
         ContentValues values = new ContentValues();
         values.put(ScheduleEntry.COLUMN_SCHEDULE_START_TIME, 420);
         values.put(ScheduleEntry.COLUMN_SCHEDULE_END_TIME, 650);

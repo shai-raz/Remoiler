@@ -89,12 +89,13 @@ public class MainActivity extends AppCompatActivity {
 
             // Respond to a click on the "Delete all entries" menu option
             case R.id.action_delete_all_entries:
-                // Do nothing for now
+                deleteAllEntries();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    // Insert dummy boiler
     private void insertDummyData() {
         RemoilerDbHelper mDbHelper = new RemoilerDbHelper(this);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -109,6 +110,17 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Added Dummy Data! ID: " + newRowId, Toast.LENGTH_SHORT).show();
         else
             Toast.makeText(this, "Problem adding dummy data", Toast.LENGTH_SHORT).show();
+
+        db.close();
+    }
+
+    // Delete all entries
+    private void deleteAllEntries() {
+        RemoilerDbHelper mDbHelper = new RemoilerDbHelper(this);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        db.delete(BoilerEntry.TABLE_NAME, null, null);
+        Toast.makeText(this, "All boilers were deleted.", Toast.LENGTH_SHORT).show();
 
         db.close();
     }

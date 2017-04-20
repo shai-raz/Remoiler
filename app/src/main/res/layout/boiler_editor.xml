@@ -18,7 +18,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:padding="@dimen/activity_margin"
-    tools:context=".BoilerActivity">
+    tools:context=".BoilerEditor">
 
     <!-- Label -->
     <TextView

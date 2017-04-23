@@ -13,11 +13,6 @@
     <string name="status_off">OFF</string>
     <string name="status_change_msg">The boiler is now %s!</string>
 
-    <!-- Schedule Layout -->
-    <string name="schedule_start_time">start time:</string>
-    <string name="schedule_end_time">end time:</string>
-    <string name="schedule_days_in_week">returns:</string>
-
     <!-- Boiler Editor -->
     <string name="boiler_editor_general">General</string>
     <string name="boiler_editor_hint_name">Name</string>
@@ -25,11 +20,20 @@
     <string name="boiler_editor_hint_password">Password</string>
     <string name="boiler_editor_error_fill_all_fields">Please fill in all fields.</string>
     <string name="boiler_editor_menu_save">save</string>
-    <string name="schedule_sunday">Sunday</string>
-    <string name="schedule_monday">Monday</string>
-    <string name="schedule_tuesday">Tuesday</string>
-    <string name="schedule_wednesday">Wednesday</string>
-    <string name="schedule_thursday">Thursday</string>
-    <string name="schedule_friday">Friday</string>
-    <string name="schedule_saturday">Saturday</string>
+
+    <!-- Schedule Fragment -->
+    <string name="schedule_start_time">start time:</string>
+    <string name="schedule_end_time">end time:</string>
+    <string name="schedule_days_in_week">returns:</string>
+    <string name="schedule_sunday">Su</string>
+    <string name="schedule_monday">M</string>
+    <string name="schedule_tuesday">Te</string>
+    <string name="schedule_wednesday">W</string>
+    <string name="schedule_thursday">Th</string>
+    <string name="schedule_friday">F</string>
+    <string name="schedule_saturday">Sa</string>
+
+    <!-- Schedule Editor -->
+    <string name="schedule_editor_start_time">Start Time:</string>
+    <string name="schedule_editor_end_time">End Time:</string>
 </resources>

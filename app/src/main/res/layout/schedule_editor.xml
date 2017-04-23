@@ -20,53 +20,135 @@
     android:padding="@dimen/activity_margin"
     tools:context=".ScheduleEditor">
 
+    <!-- Start Time Label -->
+    <TextView
+        android:text="@string/schedule_editor_start_time"
+        style="@style/ScheduleEditorLabelStyle"
+        android:layout_gravity="center_horizontal"/>
+
     <!-- Start Time Layout -->
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <!-- Start Time Label -->
-        <TextView
-            android:text="Start Time:"
-            style="@style/ScheduleEditorLabelStyle" />
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center_horizontal"
+        android:layoutDirection="ltr">
 
         <NumberPicker
-            android:id="@+id/hourPicker"
+            android:id="@+id/startTimeHourPicker"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:background="#11333333"
+            android:descendantFocusability="blocksDescendants"
+            android:layout_alignParentLeft="true" />
+
+        <TextView
+            android:id="@+id/startTimeColon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text=":"
+            android:layout_toRightOf="@id/startTimeHourPicker"
+            android:layout_centerInParent="true"/>
+
+        <NumberPicker
+            android:id="@+id/starTimeMinutePicker"
             android:layout_width="wrap_content"
             android:layout_height="100dp"
             android:layout_marginLeft="8dp"
             android:background="#11333333"
             android:descendantFocusability="blocksDescendants"
+
+            android:layout_toRightOf="@id/startTimeColon"
             />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="8dp"
-            android:text=":"/>
-
-        <cn.carbswang.android.numberpickerview.library.NumberPickerView
-            android:id="@+id/minutesPicker"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:layout_marginLeft="8dp"
-            android:background="#11333333"
-            app:npv_RespondChangeOnDetached="false"
-            app:npv_ItemPaddingHorizontal="5dp"
-            app:npv_ItemPaddingVertical="5dp"
-            app:npv_ShowCount="3"
-            app:npv_TextSizeNormal="16sp"
-            app:npv_TextSizeSelected="20sp"
-            app:npv_WrapSelectorWheel="true" />
-
-
-    </LinearLayout>
+    </RelativeLayout>
 
     <!-- End Time Label -->
     <TextView
-        android:text="End Time:"
-        style="@style/ScheduleEditorLabelStyle" />
+        android:text="@string/schedule_editor_end_time"
+        style="@style/ScheduleEditorLabelStyle"
+        android:layout_gravity="center_horizontal"/>
+
+    <!-- End Time Layout -->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center_horizontal"
+        android:layoutDirection="ltr">
+
+        <NumberPicker
+            android:id="@+id/endTimeHourPicker"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:background="#11333333"
+            android:descendantFocusability="blocksDescendants"
+            android:layout_alignParentLeft="true" />
+
+        <TextView
+            android:id="@+id/endTimeColon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@id/endTimeHourPicker"
+            android:text=":"
+            android:layout_centerInParent="true"/>
+
+        <NumberPicker
+            android:id="@+id/endTimeMinutePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:background="#11333333"
+            android:descendantFocusability="blocksDescendants"
+            android:layout_toRightOf="@id/endTimeColon"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <ToggleButton
+            style="@style/dayInWeekToggleButton"
+            android:textOn="@string/schedule_sunday"
+            android:textOff="@string/schedule_sunday" />
+
+        <ToggleButton
+            style="@style/dayInWeekToggleButton"
+            android:textOn="@string/schedule_monday"
+            android:textOff="@string/schedule_monday" />
+
+        <ToggleButton
+            style="@style/dayInWeekToggleButton"
+            android:textOn="@string/schedule_tuesday"
+            android:textOff="@string/schedule_tuesday" />
+
+        <ToggleButton
+            style="@style/dayInWeekToggleButton"
+            android:textOn="@string/schedule_wednesday"
+            android:textOff="@string/schedule_wednesday" />
+
+        <ToggleButton
+            style="@style/dayInWeekToggleButton"
+            android:textOn="@string/schedule_thursday"
+            android:textOff="@string/schedule_thursday" />
+
+        <ToggleButton
+            style="@style/dayInWeekToggleButton"
+            android:textOn="@string/schedule_friday"
+            android:textOff="@string/schedule_friday" />
+
+        <ToggleButton
+            style="@style/dayInWeekToggleButton"
+            android:textOn="@string/schedule_saturday"
+            android:textOff="@string/schedule_saturday" />
+
+    </LinearLayout>
+
+<!-- TODO: Visual Polish; Better looking ToggleButton, check RTL FULL compatibility, General. -->
 
 </LinearLayout>

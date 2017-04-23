@@ -50,6 +50,7 @@ public class BoilerEditor extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_save:
                 saveKey(String.valueOf(userEdit), String.valueOf(passEdit));
+                this.finish();
                 return true;
         }
 
@@ -60,7 +61,6 @@ public class BoilerEditor extends AppCompatActivity {
         if (user != null && !user.equals("") && pass != null && !pass.equals("")) {
             String key = ServerQueries.getAuthKeyByUserPass(user, pass);
             Toast.makeText(this, key, Toast.LENGTH_SHORT).show();
-            // TODO: save key into boiler database
 
             RemoilerDbHelper mDbHelper = new RemoilerDbHelper(this);
             SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -77,7 +77,6 @@ public class BoilerEditor extends AppCompatActivity {
                 Toast.makeText(this, "Problem adding new boiler.", Toast.LENGTH_SHORT).show();
 
             db.close();
-            this.finish();
         } else {
             Toast.makeText(this, R.string.boiler_editor_error_fill_all_fields, Toast.LENGTH_SHORT).show();
         }

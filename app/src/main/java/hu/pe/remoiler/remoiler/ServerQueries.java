@@ -6,6 +6,8 @@ import android.util.Log;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
+
 /**
  * Responsible for getting information from the server.
  */
@@ -52,12 +54,12 @@ final class ServerQueries {
         return queryUrl;
     }*/
 
-    static URL createURL(String path, String... params) {
+    static URL createURL(String path, String authKey ,String... params) {
         Uri baseUri = Uri.parse(BASE_SERVER_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
         //Temporary Auth Key
-        String authKey = "raz";
+        //String authKey = "raz";
 
         uriBuilder.appendPath(path);
         uriBuilder.appendPath(authKey);

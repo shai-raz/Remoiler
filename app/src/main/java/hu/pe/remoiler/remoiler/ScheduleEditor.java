@@ -1,5 +1,6 @@
 package hu.pe.remoiler.remoiler;
 
+import android.app.ActionBar;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -8,7 +9,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.NumberPicker;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
@@ -20,11 +23,14 @@ public class ScheduleEditor extends AppCompatActivity {
     NumberPicker startTimeMinutePicker;
     NumberPicker endTimeHourPicker;
     NumberPicker endTimeMinutePicker;
+    ToggleButton[] toggleDay = new ToggleButton[7];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.schedule_editor);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         startTimeHourPicker = (NumberPicker) findViewById(R.id.startTimeHourPicker);
         startTimeMinutePicker = (NumberPicker) findViewById(R.id.starTimeMinutePicker);
@@ -68,6 +74,14 @@ public class ScheduleEditor extends AppCompatActivity {
             }
         });
 
+        toggleDay[0] = (ToggleButton) findViewById(R.id.toggleSunday);
+        toggleDay[1] = (ToggleButton) findViewById(R.id.toggleMonday);
+        toggleDay[2] = (ToggleButton) findViewById(R.id.toggleTuesday);
+        toggleDay[3] = (ToggleButton) findViewById(R.id.toggleWednesday);
+        toggleDay[4] = (ToggleButton) findViewById(R.id.toggleThursday);
+        toggleDay[5] = (ToggleButton) findViewById(R.id.toggleFriday);
+        toggleDay[6] = (ToggleButton) findViewById(R.id.toggleSaturday);
+
         // TODO: add returns (days of week)
         // TODO: visual polish
         // TODO: insert everything to the "schedule" table
@@ -86,8 +100,11 @@ public class ScheduleEditor extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-                //saveSchedule();
+                saveSchedule();
                 Toast.makeText(this, "Save clicked", Toast.LENGTH_SHORT).show();
+                this.finish();
+                return true;
+            case android.R.id.home:
                 this.finish();
                 return true;
         }
@@ -95,12 +112,38 @@ public class ScheduleEditor extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Saves the created schedule into the database
+     */
     private void saveSchedule() {
         RemoilerDbHelper dbHelper = new RemoilerDbHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        //values.put(ScheduleEntry.COLUMN_SCHEDULE_START_TIME, );
+
+        // 'Convert' the times into minutes in day.
+        int startTime = (startTimeHourPicker.getValue() * 60) + startTimeMinutePicker.getValue();
+        int endTime = (endTimeHourPicker.getValue() * 60) + endTimeMinutePicker.getValue();
+
+        int[] returns = new int[7];
+
+        // Create an int array of selected days in week (which will be inserted into the db as a String)
+        for (int i = 0; i < 7; i++) {
+            returns[i] = toggleDay[i].isChecked() ? 1 : 0;
+        }
+
+        values.put(ScheduleEntry.COLUMN_SCHEDULE_START_TIME, startTime);
+        values.put(ScheduleEntry.COLUMN_SCHEDULE_END_TIME, endTime);
+        values.put(ScheduleEntry.COLUMN_SCHEDULE_RETURNS, Arrays.toString(returns));
+
+        long newRowId = db.insert(ScheduleEntry.TABLE_NAME, null, values);
+
+        if (newRowId != -1)
+            Toast.makeText(this, "Added new Boiler! ID: " + newRowId, Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(this, "Problem adding new boiler.", Toast.LENGTH_SHORT).show();
+
+        db.close();
         // TODO: Save schedule to database
         // TODO: add option to EDIT existing schedule
     }

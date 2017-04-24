@@ -17,11 +17,18 @@ import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
 public class BoilerActivity extends AppCompatActivity {
 
     String boilerName = "";
+    int boilerID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_boiler);
+
+        if (getIntent().getExtras() != null) {
+            boilerID = getIntent().getIntExtra("id", 0);
+        }
+
+        Toast.makeText(this, "boiler id is" + boilerID, Toast.LENGTH_SHORT).show();
 
         /*if (getIntent().getExtras() != null) {
             boilerName = getIntent().getStringExtra("name");

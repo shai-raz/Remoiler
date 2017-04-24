@@ -38,6 +38,9 @@
         
         <activity android:name=".ScheduleEditor"
             android:label="@string/activity_schedule_editor_label">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="hu.pe.remoiler.remoiler.BoilerActivity"/>
         </activity>
     </application>
 

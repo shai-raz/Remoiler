@@ -10,6 +10,8 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import hu.pe.remoiler.remoiler.data.BoilerContract.BoilerEntry;
+
 public class BoilerAdapter extends CursorAdapter {
 
     public BoilerAdapter(Context context, Cursor c) {
@@ -31,6 +33,7 @@ public class BoilerAdapter extends CursorAdapter {
 
         // Extract from the cursor
         final String boilerName = cursor.getString(cursor.getColumnIndex("name"));
+        final int boilerID = cursor.getInt(cursor.getColumnIndex(BoilerEntry._ID));
 
         // Populate widgets with cursor's data
         boilerNameTv.setText(boilerName);
@@ -41,6 +44,7 @@ public class BoilerAdapter extends CursorAdapter {
                 //Toast.makeText(context, boilerName, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context, BoilerEditor.class);
                 intent.putExtra("name", boilerName);
+                //intent.putExtra("id", boilerID);
                 context.startActivity(intent);
             }
         });
@@ -49,7 +53,7 @@ public class BoilerAdapter extends CursorAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, BoilerActivity.class);
-                //intent.putExtra("name", boilerName);
+                intent.putExtra("id", boilerID);
                 context.startActivity(intent);
             }
         });

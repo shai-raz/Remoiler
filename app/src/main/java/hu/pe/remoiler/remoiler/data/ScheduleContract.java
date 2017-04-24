@@ -55,7 +55,6 @@ public final class ScheduleContract {
          *
          * TYPE: INTEGER
          */
-
         public final static String COLUMN_SCHEDULE_BOILER_ID = "boiler_id";
 
         /**

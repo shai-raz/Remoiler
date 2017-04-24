@@ -47,6 +47,7 @@ public class ScheduleAdapter extends CursorAdapter {
         // Create an array of days
         daysInWeekCursor = daysInWeekCursor.replace("[","");
         daysInWeekCursor = daysInWeekCursor.replace("]","");
+        daysInWeekCursor = daysInWeekCursor.replaceAll("\\s+","");
         String[] daysInWeekStringArray = daysInWeekCursor.split(",");
 
         // Convert array to int array

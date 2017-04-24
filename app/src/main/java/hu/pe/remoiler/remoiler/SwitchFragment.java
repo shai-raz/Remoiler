@@ -1,6 +1,9 @@
 package hu.pe.remoiler.remoiler;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -12,6 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import hu.pe.remoiler.remoiler.data.BoilerContract.BoilerEntry;
+import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
 
 public class SwitchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Integer> {
 
@@ -32,14 +38,19 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
     // Switch Button ImageView
     private ImageView switchButton;
 
-    private LoaderManager loaderManager;
-    private ConnectivityManager cm;
+    LoaderManager loaderManager;
+    ConnectivityManager cm;
     Vibrator vibe;
+
+    // Boiler ID sent from the MainActivity;
+    private int boilerID;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_switch, container, false);
+
+        boilerID = getActivity().getIntent().getIntExtra("id", 0);
 
         switchButton = (ImageView) rootView.findViewById(R.id.switch_button);
         vibe = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
@@ -105,7 +116,30 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public android.support.v4.content.Loader<Integer> onCreateLoader(int id, Bundle args) {
-        return new StatusLoader(getActivity(), ServerQueries.createURL("status"));
+        //TODO: see placement of this database query
+
+        RemoilerDbHelper dbHelper = new RemoilerDbHelper(getActivity());
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String[] projection = { BoilerEntry.COLUMN_BOILER_KEY };
+        String[] selectionArgs = { String.valueOf(boilerID) };
+
+        Cursor cursor = db.query(
+                BoilerEntry.TABLE_NAME,
+                projection,
+                BoilerEntry._ID + "=?",
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+        Log.i(LOG_TAG, "CURSOR QUERY: " + DatabaseUtils.dumpCursorToString(cursor));
+
+        cursor.moveToFirst();
+        String authKey = cursor.getString(cursor.getColumnIndex(BoilerEntry.COLUMN_BOILER_KEY));
+
+        db.close();
+        return new StatusLoader(getActivity(), ServerQueries.createURL("status", authKey));
     }
 
     @Override

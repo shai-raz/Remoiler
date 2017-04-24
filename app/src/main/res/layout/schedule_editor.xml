@@ -113,36 +113,43 @@
         android:layout_marginTop="16dp">
 
         <ToggleButton
+            android:id="@+id/toggleSunday"
             style="@style/dayInWeekToggleButton"
             android:textOn="@string/schedule_sunday"
             android:textOff="@string/schedule_sunday" />
 
         <ToggleButton
+            android:id="@+id/toggleMonday"
             style="@style/dayInWeekToggleButton"
             android:textOn="@string/schedule_monday"
             android:textOff="@string/schedule_monday" />
 
         <ToggleButton
+            android:id="@+id/toggleTuesday"
             style="@style/dayInWeekToggleButton"
             android:textOn="@string/schedule_tuesday"
             android:textOff="@string/schedule_tuesday" />
 
         <ToggleButton
+            android:id="@+id/toggleWednesday"
             style="@style/dayInWeekToggleButton"
             android:textOn="@string/schedule_wednesday"
             android:textOff="@string/schedule_wednesday" />
 
         <ToggleButton
+            android:id="@+id/toggleThursday"
             style="@style/dayInWeekToggleButton"
             android:textOn="@string/schedule_thursday"
             android:textOff="@string/schedule_thursday" />
 
         <ToggleButton
+            android:id="@+id/toggleFriday"
             style="@style/dayInWeekToggleButton"
             android:textOn="@string/schedule_friday"
             android:textOff="@string/schedule_friday" />
 
         <ToggleButton
+            android:id="@+id/toggleSaturday"
             style="@style/dayInWeekToggleButton"
             android:textOn="@string/schedule_saturday"
             android:textOff="@string/schedule_saturday" />

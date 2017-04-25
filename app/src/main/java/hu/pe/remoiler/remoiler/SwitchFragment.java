@@ -50,7 +50,7 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_switch, container, false);
 
-        boilerID = getActivity().getIntent().getIntExtra("id", 0);
+        boilerID = getActivity().getIntent().getIntExtra("boilerID", 0);
 
         switchButton = (ImageView) rootView.findViewById(R.id.switch_button);
         vibe = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);

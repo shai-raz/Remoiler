@@ -25,10 +25,14 @@ public class ScheduleEditor extends AppCompatActivity {
     NumberPicker endTimeMinutePicker;
     ToggleButton[] toggleDay = new ToggleButton[7];
 
+    private int boilerID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.schedule_editor);
+
+        boilerID = getIntent().getIntExtra("boilerID", 0);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -132,6 +136,7 @@ public class ScheduleEditor extends AppCompatActivity {
             returns[i] = toggleDay[i].isChecked() ? 1 : 0;
         }
 
+        values.put(ScheduleEntry.COLUMN_SCHEDULE_BOILER_ID, boilerID);
         values.put(ScheduleEntry.COLUMN_SCHEDULE_START_TIME, startTime);
         values.put(ScheduleEntry.COLUMN_SCHEDULE_END_TIME, endTime);
         values.put(ScheduleEntry.COLUMN_SCHEDULE_RETURNS, Arrays.toString(returns));

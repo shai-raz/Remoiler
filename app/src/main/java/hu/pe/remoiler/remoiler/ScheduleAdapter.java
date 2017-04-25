@@ -1,13 +1,20 @@
 package hu.pe.remoiler.remoiler;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+
+import hu.pe.remoiler.remoiler.data.BoilerContract;
+import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
+import hu.pe.remoiler.remoiler.data.ScheduleContract.ScheduleEntry;
 
 
 public class ScheduleAdapter extends CursorAdapter {
@@ -27,7 +34,7 @@ public class ScheduleAdapter extends CursorAdapter {
 
     // Bind all the views into the layout
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, Cursor cursor) {
         // Declare all widgets in the layout
         TextView startTimeTv = (TextView) view.findViewById(R.id.schedule_start_time);
         TextView endTimeTv = (TextView) view.findViewById(R.id.schedule_end_time);
@@ -35,10 +42,12 @@ public class ScheduleAdapter extends CursorAdapter {
         TextView daysInWeekTv = (TextView) view.findViewById(R.id.schedule_days_in_week);
 
         // Extract from Cursor
-        int startTimeCursor = cursor.getInt(cursor.getColumnIndex("start_time"));
-        int endTimeCursor = cursor.getInt(cursor.getColumnIndex("end_time"));
-        int active = cursor.getInt(cursor.getColumnIndex("active"));
-        String daysInWeekCursor = cursor.getString(cursor.getColumnIndex("returns"));
+        final int scheduleID = cursor.getInt(cursor.getColumnIndex(ScheduleEntry._ID));
+        final int boilerID = cursor.getInt(cursor.getColumnIndex(ScheduleEntry.COLUMN_SCHEDULE_BOILER_ID));
+        int startTimeCursor = cursor.getInt(cursor.getColumnIndex(ScheduleEntry.COLUMN_SCHEDULE_START_TIME));
+        int endTimeCursor = cursor.getInt(cursor.getColumnIndex(ScheduleEntry.COLUMN_SCHEDULE_END_TIME));
+        int active = cursor.getInt(cursor.getColumnIndex(ScheduleEntry.COLUMN_SCHEDULE_ACTIVE));
+        String daysInWeekCursor = cursor.getString(cursor.getColumnIndex(ScheduleEntry.COLUMN_SCHEDULE_RETURNS));
 
         // Redefine extracted information
         String startTime = minutesInDayToTime(startTimeCursor);
@@ -62,6 +71,31 @@ public class ScheduleAdapter extends CursorAdapter {
         endTimeTv.setText(endTime);
         activeSwitch.setChecked(active == 1);
         daysInWeekTv.setText(intArrayDaysToString(daysInWeek));
+
+        activeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                RemoilerDbHelper dbHelper = new RemoilerDbHelper(context);
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+                ContentValues values = new ContentValues();
+                values.put(ScheduleEntry.COLUMN_SCHEDULE_ACTIVE, isChecked);
+
+                db.update(ScheduleEntry.TABLE_NAME,
+                        values,
+                        ScheduleEntry.COLUMN_SCHEDULE_BOILER_ID + "=?" +
+                                " AND " + ScheduleEntry._ID + "=?",
+                        new String[] { String.valueOf(boilerID), String.valueOf(scheduleID) }
+                );
+
+                db.close();
+
+                /*
+                // TODO: update active with server
+                Consider moving this db query to ScheduleFragment and then call it from here.
+                */
+            }
+        });
     }
 
     /**

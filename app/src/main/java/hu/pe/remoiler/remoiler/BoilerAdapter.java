@@ -53,7 +53,7 @@ public class BoilerAdapter extends CursorAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, BoilerActivity.class);
-                intent.putExtra("id", boilerID);
+                intent.putExtra("boilerID", boilerID);
                 context.startActivity(intent);
             }
         });

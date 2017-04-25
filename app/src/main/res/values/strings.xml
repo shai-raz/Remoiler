@@ -36,4 +36,8 @@
     <!-- Schedule Editor -->
     <string name="schedule_editor_start_time">Start Time:</string>
     <string name="schedule_editor_end_time">End Time:</string>
+
+    <!-- GENERAL menu strings -->
+    <string name="menu_delete">Delete</string>
+    <string name="menu_edit">Edit</string>
 </resources>

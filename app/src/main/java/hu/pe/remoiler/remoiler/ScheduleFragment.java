@@ -24,9 +24,13 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
     View rootView;
     //ScheduleAdapter scheduleAdapter;
 
+    private int boilerID;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        boilerID = getActivity().getIntent().getIntExtra("boilerID", 0);
 
         // Root view that will be edited & returned at the end
         rootView = inflater.inflate(R.layout.fragment_schedule, container, false);
@@ -37,13 +41,12 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ScheduleEditor.class);
+                intent.putExtra("boilerID", boilerID);
                 startActivity(intent);
             }
         });
 
         populateList();
-
-        //displayDatabaseInfo();
 
         return rootView;
     }
@@ -66,19 +69,19 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
         // Columns to select
         String[] projection = {
                 ScheduleEntry._ID,
+                ScheduleEntry.COLUMN_SCHEDULE_BOILER_ID,
                 ScheduleEntry.COLUMN_SCHEDULE_START_TIME,
                 ScheduleEntry.COLUMN_SCHEDULE_END_TIME,
                 ScheduleEntry.COLUMN_SCHEDULE_RETURNS,
                 ScheduleEntry.COLUMN_SCHEDULE_ACTIVE
         };
 
-        // Perform this raw SQL query "SELECT * FROM pets"
-        // to get a Cursor that contains all rows from the pets table.
+
         Cursor cursor = db.query(
                 ScheduleEntry.TABLE_NAME,
                 projection,
-                null,
-                null,
+                ScheduleEntry.COLUMN_SCHEDULE_BOILER_ID + "=?",
+                new String[] { String.valueOf(boilerID) },
                 null,
                 null,
                 null,

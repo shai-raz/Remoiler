@@ -12,16 +12,18 @@ public class ChangeStatusTask extends AsyncTask<String, Void, Void> {
 
     @Override
     protected Void doInBackground(String... params) {
-        URL queryUrl = ServerQueries.createURL("change_status", params[0]);
+        URL queryUrl = ServerQueries.createURL(ServerQueries.PATH_CHANGE_STATUS);
 
         try {
-            boolean response = NetworkUtils.executeURL(queryUrl);
+            boolean response = NetworkUtils.executeURL(queryUrl, params);
             Log.i(LOG_TAG, "response: " + response);
 
             if (!response) {
+                // TODO: Return bad response;
                 Log.e(LOG_TAG, "Bad response.");
             }
         } catch (IOException e) {
+            // TODO: Return bad response;
             Log.e(LOG_TAG, "ERROR CONNECTING TO SERVER");
             e.printStackTrace();
         }

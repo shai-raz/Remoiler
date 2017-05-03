@@ -83,10 +83,9 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
     private void changeStatus() {
         mStatus = 1 - mStatus;
 
-        // Update server with new status @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         ChangeStatusTask changeStatusTask = new ChangeStatusTask();
-        changeStatusTask.execute(String.valueOf(mStatus));
-        //ServerQueries.createURL("change_status", "0");
+        changeStatusTask.execute("status="+String.valueOf(mStatus));
+        // TODO: Handle Bad response;
         // TODO: update server with new status.
     }
 
@@ -139,7 +138,7 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
         String authKey = cursor.getString(cursor.getColumnIndex(BoilerEntry.COLUMN_BOILER_KEY));
 
         db.close();
-        return new StatusLoader(getActivity(), ServerQueries.createURL("status", authKey));
+        return new StatusLoader(getActivity(), ServerQueries.createURL(ServerQueries.PATH_GET_STATUS));
     }
 
     @Override

@@ -2,20 +2,19 @@ package hu.pe.remoiler.remoiler;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ActionMode;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -25,45 +24,22 @@ import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
 
 public class MainActivity extends AppCompatActivity {
 
+    final private String LOG_TAG = this.getClass().getSimpleName();
+
     final Context context = this;
     private ListView listView;
-    ActionMode.Callback mActionModeCallback;
-    ActionMode mActionMode;
+    private BoilerAdapter boilerAdapter;
+    private ActionMode mActionMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mActionModeCallback = new ActionMode.Callback() {
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                mode.setTitle("Demo");
-                getMenuInflater().inflate(R.menu.menu_main_list, menu);
-                return true;
-            }
+        populateList();
+        //listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        //listView.setItemsCanFocus(false);
 
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch(item.getItemId()) {
-                    case R.id.menu_main_edit:
-                        Toast.makeText(getBaseContext(), "hello motherfucker", Toast.LENGTH_SHORT).show();
-                        mode.finish();
-                        break;
-                }
-                return false;
-                }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-                mActionMode = null;
-            }
-        };
 
         // Setting OnClickListener on the Floating button that will direct to the Boiler Editor
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -75,23 +51,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        populateList();
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(context, "clicked long", Toast.LENGTH_SHORT).show();
-                if (mActionMode != null) {
-                    return false;
-                }
-                mActionMode = startActionMode(mActionModeCallback);
-                view.setSelected(true);
-                return true;
-            }
-        });
 
         // TODO: finish Context Menu ACTION MODE
 
+    }
+
+   /* private void onListItemSelect(int position) {
+        boilerAdapter.toggleSelection(position);//Toggle the selection
+        boolean hasCheckedItems = boilerAdapter.getSelectedCount() > 0;//Check if any items are already selected or not
+        if (hasCheckedItems && mActionMode == null)
+            // there are some selected items, start the actionMode
+            mActionMode = (this.startSupportActionMode(new Toolbar_ActionMode_Callback(this, null, boilerAdapter, item_models, true));
+        else if (!hasCheckedItems && mActionMode != null)
+            // there no selected items, finish the actionMode
+            mActionMode.finish();
+        if (mActionMode != null)
+            //set action mode title on item selection
+            mActionMode.setTitle(String.valueOf(boilerAdapter
+                    .getSelectedCount()) + " selected");
+    }*/
+
+    //Set action mode null after use
+    public void setNullToActionMode() {
+        if (mActionMode != null)
+            mActionMode = null;
     }
 
     private void populateList() {
@@ -123,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Define list&adapter and set adapter on list.
         listView = (ListView) findViewById(R.id.main_list_view);
-        BoilerAdapter boilerAdapter = new BoilerAdapter(this, cursor);
+        boilerAdapter = new BoilerAdapter(this, cursor);
         listView.setAdapter(boilerAdapter);
 
 

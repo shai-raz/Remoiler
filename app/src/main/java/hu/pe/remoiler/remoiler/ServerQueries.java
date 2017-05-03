@@ -18,6 +18,9 @@ final class ServerQueries {
     private static final String BASE_SERVER_URL = "http://localhost/remoiler/public";
     private static URL queryUrl = null;
 
+    public final static int PATH_GET_STATUS = 601;
+    public final static int PATH_CHANGE_STATUS = 602;
+
     // Uncallable constructor
     private ServerQueries() {}
 
@@ -54,21 +57,19 @@ final class ServerQueries {
         return queryUrl;
     }*/
 
-    static URL createURL(String path, String authKey ,String... params) {
+    static URL createURL(int path) {
         Uri baseUri = Uri.parse(BASE_SERVER_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
         //Temporary Auth Key
         //String authKey = "raz";
 
-        uriBuilder.appendPath(path);
-        uriBuilder.appendPath(authKey);
-
         switch (path) {
-            case "status":
+            case PATH_GET_STATUS:
+                uriBuilder.appendPath("get_status");
                 break;
-            case "change_status":
-                uriBuilder.appendPath(params[0]);
+            case PATH_CHANGE_STATUS:
+                uriBuilder.appendPath("change_status");
                 break;
         }
 

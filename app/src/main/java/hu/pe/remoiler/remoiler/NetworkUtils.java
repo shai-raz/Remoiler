@@ -3,6 +3,7 @@ package hu.pe.remoiler.remoiler;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -20,7 +21,7 @@ public final class NetworkUtils {
     // Uncallable constructor
     private NetworkUtils() {}
 
-    static boolean executeURL(URL queryUrl) throws IOException {
+    static boolean executeURL(URL queryUrl, String... params) throws IOException {
         HttpURLConnection urlConnection = null;
         InputStream inputStream = null;
 
@@ -29,7 +30,19 @@ public final class NetworkUtils {
             urlConnection = (HttpURLConnection) queryUrl.openConnection();
             urlConnection.setReadTimeout(3000);
             urlConnection.setConnectTimeout(3000);
-            urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
+
+            DataOutputStream dStream = new DataOutputStream(urlConnection.getOutputStream());
+            String urlParameters = "";
+            for (String param : params) {
+                urlParameters += param + "&";
+            }
+            dStream.writeBytes(urlParameters);
+            dStream.flush();
+            dStream.close();
+
             urlConnection.connect();
 
             // Checking if the response code is OK

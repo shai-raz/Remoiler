@@ -31,9 +31,9 @@ public class BoilerActivity extends AppCompatActivity {
         Toast.makeText(this, "boiler id is" + boilerID, Toast.LENGTH_SHORT).show();
 
         /*if (getIntent().getExtras() != null) {
-            boilerName = getIntent().getStringExtra("name");
+            mBoilerName = getIntent().getStringExtra("name");
 
-            //nameEdit.setText(boilerName, TextView.BufferType.EDITABLE);
+            //mNameEdit.setText(mBoilerName, TextView.BufferType.EDITABLE);
         }*/
 
         // Create the ViewPager object

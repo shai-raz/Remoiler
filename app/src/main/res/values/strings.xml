@@ -15,11 +15,15 @@
 
     <!-- Boiler Editor -->
     <string name="boiler_editor_general">General</string>
+    <string name="boiler_editor_add_with_qr">Add with QR</string>
     <string name="boiler_editor_hint_name">Name</string>
-    <string name="boiler_editor_hint_username">Username</string>
-    <string name="boiler_editor_hint_password">Password</string>
+    <string name="boiler_editor_hint_key">Key</string>
     <string name="boiler_editor_error_fill_all_fields">Please fill in all fields.</string>
     <string name="boiler_editor_menu_save">save</string>
+
+    <!-- Boiler Activity -->
+    <string name="boiler_error_no_internet_connection">No internet connection!</string>
+    <string name="boiler_error_check_your_connection">Check your connection and try again.</string>
 
     <!-- Schedule Fragment -->
     <string name="schedule_start_time">start time:</string>
@@ -40,4 +44,9 @@
     <!-- GENERAL menu strings -->
     <string name="menu_delete">Delete</string>
     <string name="menu_edit">Edit</string>
+
+    <!-- Network Utils -->
+    <string name="boiler_error_cant_get_data_from_server">Can\'t get data from server.</string>
+    <string name="boiler_error_please_try_again_later">Please try again later.</string>
+
 </resources>

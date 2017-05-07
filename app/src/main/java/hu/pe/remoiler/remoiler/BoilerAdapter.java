@@ -43,8 +43,9 @@ public class BoilerAdapter extends CursorAdapter {
         ImageView editIcon = (ImageView) view.findViewById(R.id.boiler_edit_icon);
 
         // Extract from the cursor
-        final String boilerName = cursor.getString(cursor.getColumnIndex("name"));
+        final String boilerName = cursor.getString(cursor.getColumnIndex(BoilerEntry.COLUMN_BOILER_NAME));
         final int boilerID = cursor.getInt(cursor.getColumnIndex(BoilerEntry._ID));
+        final String boilerKey = cursor.getString(cursor.getColumnIndex(BoilerEntry.COLUMN_BOILER_KEY));
 
         // Populate widgets with cursor's data
         boilerNameTv.setText(boilerName);
@@ -52,10 +53,11 @@ public class BoilerAdapter extends CursorAdapter {
         editIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(context, boilerName, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, mBoilerName, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context, BoilerEditor.class);
-                intent.putExtra("name", boilerName);
-                //intent.putExtra("id", boilerID);
+                intent.putExtra("boilerID", boilerID);
+                intent.putExtra("boilerName", boilerName);
+                intent.putExtra("boilerKey", boilerKey);
                 context.startActivity(intent);
             }
         });

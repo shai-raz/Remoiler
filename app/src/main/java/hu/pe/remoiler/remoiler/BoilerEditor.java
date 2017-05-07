@@ -1,6 +1,5 @@
 package hu.pe.remoiler.remoiler;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -16,24 +15,29 @@ import hu.pe.remoiler.remoiler.data.BoilerContract.BoilerEntry;
 
 public class BoilerEditor extends AppCompatActivity {
 
-    String boilerName = "";
-    EditText nameEdit;
-    EditText userEdit;
-    EditText passEdit;
+    int mBoilerID;
+    String mBoilerName = "";
+    String mBoilerKey = "";
+    EditText mNameEdit;
+    EditText mKeyEdit;
+    boolean mEditMode = false;
             
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.boiler_editor);
 
-        nameEdit = (EditText) findViewById(R.id.boiler_name_edit);
-        userEdit = (EditText) findViewById(R.id.boiler_username_edit);
-        passEdit = (EditText) findViewById(R.id.boiler_password_edit);
+        mNameEdit = (EditText) findViewById(R.id.boiler_editor_name_edit);
+        mKeyEdit = (EditText) findViewById(R.id.boiler_editor_key_edit);
 
         if (getIntent().getExtras() != null) {
-            boilerName = getIntent().getStringExtra("name");
-            
-            nameEdit.setText(boilerName, TextView.BufferType.EDITABLE);
+            mEditMode = true;
+            mBoilerID = getIntent().getIntExtra("boilerID", 0);
+            mBoilerName = getIntent().getStringExtra("boilerName");
+            mBoilerKey = getIntent().getStringExtra("boilerKey");
+
+            mNameEdit.setText(mBoilerName, TextView.BufferType.EDITABLE);
+            mKeyEdit.setText(mBoilerKey, TextView.BufferType.EDITABLE);
         }
     }
 
@@ -49,32 +53,42 @@ public class BoilerEditor extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-                saveKey(String.valueOf(userEdit), String.valueOf(passEdit));
-                this.finish();
+                saveKey(mNameEdit.getText().toString(), mKeyEdit.getText().toString());
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void saveKey(String user, String pass) {
-        if (user != null && !user.equals("") && pass != null && !pass.equals("")) {
-            String key = ServerQueries.getAuthKeyByUserPass(user, pass);
+    private void saveKey(String name, String key) {
+        if (name != null && !name.equals("") && key != null && !key.equals("")) {
+            // TODO: check if key exists in server's database
             Toast.makeText(this, key, Toast.LENGTH_SHORT).show();
 
             RemoilerDbHelper mDbHelper = new RemoilerDbHelper(this);
             SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
             ContentValues values = new ContentValues();
-            values.put(BoilerEntry.COLUMN_BOILER_NAME, nameEdit.getText().toString());
+            values.put(BoilerEntry.COLUMN_BOILER_NAME, name);
             values.put(BoilerEntry.COLUMN_BOILER_KEY, key);
 
-            long newRowId = db.insert(BoilerEntry.TABLE_NAME, null, values);
+            long newRowId;
+            String whereClause = BoilerEntry._ID + "=?";
+            String[] whereArgs = {String.valueOf(mBoilerID)};
+
+            if (!mEditMode)
+                // Make a new boiler
+                newRowId = db.insert(BoilerEntry.TABLE_NAME, null, values);
+            else
+                // Update existing boiler
+                newRowId = db.update(BoilerEntry.TABLE_NAME, values, whereClause, whereArgs);
 
             if (newRowId != -1)
                 Toast.makeText(this, "Added new Boiler! ID: " + newRowId, Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(this, "Problem adding new boiler.", Toast.LENGTH_SHORT).show();
+
+            this.finish();
 
             db.close();
         } else {

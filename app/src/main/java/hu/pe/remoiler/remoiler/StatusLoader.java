@@ -8,14 +8,16 @@ import java.io.IOException;
 import java.net.URL;
 
 
-public class StatusLoader extends android.support.v4.content.AsyncTaskLoader<Integer> {
+class StatusLoader extends android.support.v4.content.AsyncTaskLoader<Integer> {
 
     final static String LOG_TAG = StatusLoader.class.getSimpleName();
     URL mUrl;
+    Context mContext;
 
-    public StatusLoader(Context context, URL url) {
+    StatusLoader(Context context, URL url) {
         super(context);
         mUrl = url;
+        mContext = context;
     }
 
     @Override
@@ -29,13 +31,14 @@ public class StatusLoader extends android.support.v4.content.AsyncTaskLoader<Int
             String response = NetworkUtils.getStringFromURL(mUrl);
             Log.i(LOG_TAG, "response: " + response);
 
-            if (response != null && !response.equals("") && response.equals("1")) return 1;
+            if (response == null) return null;
+            else if (response.equals("1")) return 1;
             return 0;
         } catch (IOException e) {
             Log.e(LOG_TAG, "ERROR CONNECTING TO SERVER");
             e.printStackTrace();
         }
 
-        return 0;
+        return null;
     }
 }

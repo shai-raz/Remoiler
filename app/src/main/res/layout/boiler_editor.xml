@@ -36,26 +36,25 @@
 
         <!-- Name field -->
         <EditText
-            android:id="@+id/boiler_name_edit"
+            android:id="@+id/boiler_editor_name_edit"
             android:hint="@string/boiler_editor_hint_name"
             android:inputType="textCapWords"
             style="@style/EditorFieldStyle" />
 
         <!-- Key field -->
         <EditText
-            android:id="@+id/boiler_username_edit"
-            android:hint="@string/boiler_editor_hint_username"
+            android:id="@+id/boiler_editor_key_edit"
+            android:hint="@string/boiler_editor_hint_key"
             android:inputType="textCapWords"
             style="@style/EditorFieldStyle" />
 
-        <!-- Password field -->
-        <EditText
-            android:id="@+id/boiler_password_edit"
-            android:hint="@string/boiler_editor_hint_password"
-            android:inputType="textPassword"
-            android:textAlignment="viewStart"
-            android:layout_gravity="start"
-            style="@style/EditorFieldStyle" />
+        <Button
+            android:id="@+id/boiler_editor_qr_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/boiler_editor_add_with_qr"/>
     </LinearLayout>
+
+
 
 </LinearLayout>

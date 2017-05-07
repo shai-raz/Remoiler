@@ -1,6 +1,9 @@
 package hu.pe.remoiler.remoiler;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -8,8 +11,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
 import java.nio.charset.Charset;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Responsible for Network Connections to the server
@@ -21,12 +27,25 @@ public final class NetworkUtils {
     // Uncallable constructor
     private NetworkUtils() {}
 
+    static boolean isOnline() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int     exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        }
+        catch (IOException e)          { e.printStackTrace(); }
+        catch (InterruptedException e) { e.printStackTrace(); }
+
+        return false;
+    }
+
     static boolean executeURL(URL queryUrl, String... params) throws IOException {
         HttpURLConnection urlConnection = null;
         InputStream inputStream = null;
 
         try {
-            // Making the connection with the URL, using "GET" request method
+            // Making the connection with the URL, using "POST" request method
             urlConnection = (HttpURLConnection) queryUrl.openConnection();
             urlConnection.setReadTimeout(3000);
             urlConnection.setConnectTimeout(3000);
@@ -67,7 +86,7 @@ public final class NetworkUtils {
         return true;
     }
 
-    // Returns json String from given URL
+    // Returns String from given URL
     public static String getStringFromURL(URL queryUrl) throws IOException {
         HttpURLConnection urlConnection = null;
         InputStream inputStream = null;

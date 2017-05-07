@@ -1,10 +1,10 @@
 package hu.pe.remoiler.remoiler;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
@@ -14,8 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import hu.pe.remoiler.remoiler.data.BoilerContract.BoilerEntry;
 import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
 
@@ -36,10 +38,10 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
     private int mStatus = 0;
 
     // Switch Button ImageView
-    private ImageView switchButton;
+    private ImageView mSwitchButton;
+    private ProgressBar mProgressBar;
 
     LoaderManager loaderManager;
-    ConnectivityManager cm;
     Vibrator vibe;
 
     // Boiler ID sent from the MainActivity;
@@ -52,14 +54,15 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
 
         boilerID = getActivity().getIntent().getIntExtra("boilerID", 0);
 
-        switchButton = (ImageView) rootView.findViewById(R.id.switch_button);
+        mSwitchButton = (ImageView) rootView.findViewById(R.id.switch_button);
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.switch_progressbar);
         vibe = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 
         //status = new statusLoader().execute();
 
         //setButtonByStatus();
 
-        switchButton.setOnClickListener(new View.OnClickListener() {
+        mSwitchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeStatus();
@@ -68,10 +71,30 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
             }
         });
 
-        cm =  (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         loaderManager = getLoaderManager();
-        if (cm.getActiveNetworkInfo() != null)
-                loaderManager.initLoader(1, null, this);
+
+        // Check if device can access internet. If not - display an error and go back to MainActivity.
+        if (NetworkUtils.isOnline()) {
+            loaderManager.initLoader(1, null, this);
+        } else {
+            SweetAlertDialog noInternetDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText(getString(R.string.boiler_error_no_internet_connection))
+                    .setContentText(getString(R.string.boiler_error_check_your_connection))
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.dismiss();
+                            //getActivity().finish();
+                        }
+                    });
+            noInternetDialog.show();
+            noInternetDialog.setOnDismissListener(new SweetAlertDialog.OnDismissListener(){
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    getActivity().finish();
+                }
+            });
+        }
 
         return rootView;
     }
@@ -91,9 +114,9 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
 
     private void setButtonByStatus() {
         if (mStatus == SWITCH_STATUS_ON)
-            switchButton.setImageResource(SWITCH_ON_BUTTON);
+            mSwitchButton.setImageResource(SWITCH_ON_BUTTON);
         else
-            switchButton.setImageResource(SWITCH_OFF_BUTTON);
+            mSwitchButton.setImageResource(SWITCH_OFF_BUTTON);
 
         Toast.makeText(getActivity(), String.format(getResources().getString(R.string.status_change_msg), statusToText()), Toast.LENGTH_SHORT).show();
     }
@@ -145,8 +168,16 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
     public void onLoadFinished(android.support.v4.content.Loader<Integer> loader, Integer status) {
         Log.i(LOG_TAG, "onLoadFinished");
         Log.i(LOG_TAG, "status: " + status);
-        setStatus(status);
-        setButtonByStatus();
+        mProgressBar.setVisibility(ProgressBar.GONE);
+        if (status == null) {
+            new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText(getString(R.string.boiler_error_cant_get_data_from_server))
+                    .setContentText(getString(R.string.boiler_error_please_try_again_later))
+                    .show();
+        } else {
+            setStatus(status);
+            setButtonByStatus();
+        }
     }
 
     @Override

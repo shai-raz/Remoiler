@@ -6,8 +6,6 @@ import android.util.Log;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
-
 /**
  * Responsible for getting information from the server.
  */
@@ -15,7 +13,7 @@ final class ServerQueries {
 
     private final static String LOG_TAG = ServerQueries.class.getSimpleName();
 
-    private static final String BASE_SERVER_URL = "http://localhost/remoiler/public";
+    private static final String BASE_SERVER_URL = "https://remolier.000webhostapp.com/public/";
     private static URL queryUrl = null;
 
     public final static int PATH_GET_STATUS = 601;
@@ -66,7 +64,7 @@ final class ServerQueries {
 
         switch (path) {
             case PATH_GET_STATUS:
-                uriBuilder.appendPath("get_status");
+                uriBuilder.appendPath("status");
                 break;
             case PATH_CHANGE_STATUS:
                 uriBuilder.appendPath("change_status");

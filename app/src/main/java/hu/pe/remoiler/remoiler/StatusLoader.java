@@ -1,6 +1,5 @@
 package hu.pe.remoiler.remoiler;
 
-import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.util.Log;
 
@@ -13,11 +12,13 @@ class StatusLoader extends android.support.v4.content.AsyncTaskLoader<Integer> {
     final static String LOG_TAG = StatusLoader.class.getSimpleName();
     URL mUrl;
     Context mContext;
+    String mKey;
 
-    StatusLoader(Context context, URL url) {
+    StatusLoader(Context context, URL url, String key) {
         super(context);
         mUrl = url;
         mContext = context;
+        mKey = key;
     }
 
     @Override
@@ -28,7 +29,7 @@ class StatusLoader extends android.support.v4.content.AsyncTaskLoader<Integer> {
     @Override
     public Integer loadInBackground() {
         try {
-            String response = NetworkUtils.getStringFromURL(mUrl);
+            String response = NetworkUtils.getStringFromURL(mUrl, mKey);
             Log.i(LOG_TAG, "response: " + response);
 
             if (response == null) return null;

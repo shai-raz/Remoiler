@@ -1,9 +1,6 @@
 package hu.pe.remoiler.remoiler;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -11,11 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.URL;
 import java.nio.charset.Charset;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
+import java.util.Arrays;
 
 /**
  * Responsible for Network Connections to the server
@@ -43,6 +38,9 @@ public final class NetworkUtils {
     static boolean executeURL(URL queryUrl, String... params) throws IOException {
         HttpURLConnection urlConnection = null;
         InputStream inputStream = null;
+
+        Log.i(LOG_TAG, "queryUrl=" + queryUrl);
+        Log.i(LOG_TAG, "params=" + params[0] + " , " + Arrays.toString(params));
 
         try {
             // Making the connection with the URL, using "POST" request method
@@ -87,7 +85,7 @@ public final class NetworkUtils {
     }
 
     // Returns String from given URL
-    public static String getStringFromURL(URL queryUrl) throws IOException {
+    public static String getStringFromURL(URL queryUrl, String key) throws IOException {
         HttpURLConnection urlConnection = null;
         InputStream inputStream = null;
         String stringResponse = "";
@@ -97,7 +95,17 @@ public final class NetworkUtils {
             urlConnection = (HttpURLConnection) queryUrl.openConnection();
             urlConnection.setReadTimeout(3000);
             urlConnection.setConnectTimeout(3000);
-            urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
+
+            DataOutputStream dStream = new DataOutputStream(urlConnection.getOutputStream());
+            String urlParameters = "key=" + key;
+            dStream.writeBytes(urlParameters);
+            dStream.flush();
+
+            dStream.close();
+
             urlConnection.connect();
 
             // Checking if the response code is OK

@@ -25,11 +25,18 @@
     <string name="schedule_wednesday">ד</string>
     <string name="schedule_editor_end_time">נגמר ב:</string>
     <string name="schedule_editor_start_time">מתחיל ב:</string>
-    <string name="boiler_editor_add_with_qr">הוסף באמצעות QR</string>
     <string name="boiler_error_check_your_connection">בדוק את החיבור שלך ונסה שנית.</string>
     <string name="boiler_error_no_internet_connection">אין חיבור לאינטרנט!</string>
     <string name="menu_delete">מחק</string>
     <string name="menu_edit">ערוך</string>
     <string name="boiler_error_cant_get_data_from_server">קבלת נתונים מהשרת נכשלה.</string>
     <string name="boiler_error_please_try_again_later">אנא נסה שוב מאוחר יותר.</string>
+    <string name="qr_barcode_error_format">\"שגיאה בקריאת ברקוד: %1$s\"</string>
+    <string name="qr_low_storage_error">אין מספיק שטח אחסון פנוי</string>
+    <string name="qr_no_camera_permission">התוכנית לא יכולה לרוץ מאחר ואין לה גישה למצלמה. התוכנית כעת תסגר.</string>
+    <string name="qr_no_barcode_captured">לא נקלט ברקוד</string>
+    <string name="qr_ok">אוקיי</string>
+    <string name="qr_permission_camera_rationale">גישת מצלמה נצרכת בשביל זיהוי.</string>
+    <string name="qr_scan_barcode_button">סרוק ברקוד</string>
+    <string name="boiler_editor_add_with_qr">סרוק מפתח QR</string>
 </resources>

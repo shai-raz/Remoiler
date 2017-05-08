@@ -1,25 +1,40 @@
 package hu.pe.remoiler.remoiler;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
+
+import hu.pe.remoiler.remoiler.barcode.BarcodeCaptureActivity;
 import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
 import hu.pe.remoiler.remoiler.data.BoilerContract.BoilerEntry;
 
 public class BoilerEditor extends AppCompatActivity {
 
+    private static final String LOG_TAG = BoilerEditor.class.getSimpleName();
+    private static final int BARCODE_READER_REQUEST_CODE = 1;
+
     int mBoilerID;
     String mBoilerName = "";
     String mBoilerKey = "";
+
     EditText mNameEdit;
     EditText mKeyEdit;
+    Button mQrButton;
+
     boolean mEditMode = false;
             
     @Override
@@ -29,6 +44,16 @@ public class BoilerEditor extends AppCompatActivity {
 
         mNameEdit = (EditText) findViewById(R.id.boiler_editor_name_edit);
         mKeyEdit = (EditText) findViewById(R.id.boiler_editor_key_edit);
+        mQrButton = (Button) findViewById(R.id.boiler_editor_qr_button);
+
+        mQrButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(LOG_TAG, "mQrButton.onClick()");
+                Intent barcodeScannerIntent = new Intent(BoilerEditor.this, BarcodeCaptureActivity.class);
+                startActivityForResult(barcodeScannerIntent, BARCODE_READER_REQUEST_CODE);
+            }
+        });
 
         if (getIntent().getExtras() != null) {
             mEditMode = true;
@@ -58,6 +83,22 @@ public class BoilerEditor extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(LOG_TAG, "onActivityResult()");
+        if (requestCode == BARCODE_READER_REQUEST_CODE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+                    Point[] p = barcode.cornerPoints;
+                    Log.i(LOG_TAG, "BARCODE CAPTURED: " + barcode.displayValue);
+                    mKeyEdit.setText(barcode.displayValue);
+                } else {} // Handle no_barcode_captured
+            } else Log.e(LOG_TAG, String.format(getString(R.string.qr_barcode_error_format),
+                    CommonStatusCodes.getStatusCodeString(resultCode)));
+        } else super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void saveKey(String name, String key) {

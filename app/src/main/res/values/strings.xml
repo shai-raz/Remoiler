@@ -15,7 +15,7 @@
 
     <!-- Boiler Editor -->
     <string name="boiler_editor_general">General</string>
-    <string name="boiler_editor_add_with_qr">Add with QR</string>
+    <string name="boiler_editor_add_with_qr">Scan QR key</string>
     <string name="boiler_editor_hint_name">Name</string>
     <string name="boiler_editor_hint_key">Key</string>
     <string name="boiler_editor_error_fill_all_fields">Please fill in all fields.</string>
@@ -49,4 +49,13 @@
     <string name="boiler_error_cant_get_data_from_server">Can\'t get data from server.</string>
     <string name="boiler_error_please_try_again_later">Please try again later.</string>
 
+    <!-- QR Reader Strings -->
+    <string name="qr_scan_barcode_button">Scan barcode</string>
+    <string name="qr_no_barcode_captured">No barcode captured</string>
+    <string name="qr_barcode_error_format">"Error reading barcode: %1$s"</string>
+
+    <string name="qr_ok">OK</string>
+    <string name="qr_permission_camera_rationale">Access to the camera is needed for detection</string>
+    <string name="qr_no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
+    <string name="qr_low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
 </resources>

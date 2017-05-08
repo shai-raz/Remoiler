@@ -10,6 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -26,6 +27,8 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.google.android.gms:play-services-vision:10.2.1'
+    compile 'com.android.support:mediarouter-v7:25.3.1'
     compile 'cn.carbswang.android:NumberPickerView:1.1.0'
     compile 'cn.pedant.sweetalert:library:1.3'
 

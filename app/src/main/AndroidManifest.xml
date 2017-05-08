@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -39,6 +39,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="hu.pe.remoiler.remoiler.MainActivity" />
         </activity>
+
+        <activity android:name=".barcode.BarcodeCaptureActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+
         
         <activity android:name=".ScheduleEditor"
             android:label="@string/activity_schedule_editor_label">

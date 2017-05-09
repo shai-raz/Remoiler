@@ -33,8 +33,11 @@ class StatusLoader extends android.support.v4.content.AsyncTaskLoader<Integer> {
             Log.i(LOG_TAG, "response: " + response);
 
             if (response == null) return null;
+            return Integer.parseInt(response);
+
+            /*if (response == null) return null;
             else if (response.equals("1")) return 1;
-            return 0;
+            return 0;*/
         } catch (IOException e) {
             Log.e(LOG_TAG, "ERROR CONNECTING TO SERVER");
             e.printStackTrace();

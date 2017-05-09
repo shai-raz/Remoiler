@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
@@ -17,8 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import java.util.concurrent.ExecutionException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import hu.pe.remoiler.remoiler.data.BoilerContract.BoilerEntry;
@@ -52,6 +49,7 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
 
     private String authKey;
 
+    SweetAlertDialog loadingDialog;
     boolean mResponse = false;
 
     @Override
@@ -135,22 +133,22 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     private void changeStatus() {
-        SweetAlertDialog loadingDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE)
+        loadingDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE)
                 .setTitleText("Just a sec..");
         loadingDialog.show();
 
         ChangeStatusTask changeStatusTask = new ChangeStatusTask(getActivity());
-        String[] params = {"status="+String.valueOf(mStatus),"key=" + authKey};
+        String[] params = {"status="+String.valueOf(1- mStatus),"key=" + authKey};
 
         changeStatusTask.delegate = this;
         changeStatusTask.execute(params);
 
 
-        if (changeStatusTask.getStatus() == AsyncTask.Status.FINISHED) {
+        /*if (changeStatusTask.getStatus() == AsyncTask.Status.FINISHED) {
             loadingDialog.dismiss();
             if (mResponse)
                 mStatus = 1 - mStatus;
-        }
+        }*/
 
         // TODO: check if GOOD doesn't fall into bad response.
         // TODO: Check if Bad response well;
@@ -209,5 +207,8 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void postResult(Boolean response) {
         mResponse = response;
+        loadingDialog.dismiss();
+        if (mResponse)
+            mStatus = 1 - mStatus;
     }
 }

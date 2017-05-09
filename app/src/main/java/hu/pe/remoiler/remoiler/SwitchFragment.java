@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
@@ -17,11 +18,13 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.concurrent.ExecutionException;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import hu.pe.remoiler.remoiler.data.BoilerContract.BoilerEntry;
 import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
 
-public class SwitchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Integer> {
+public class SwitchFragment extends Fragment implements LoaderManager.LoaderCallbacks<Integer>, ChangeStatusTaskCallback {
 
     // LOG TAG Constant
     private final String LOG_TAG = SwitchFragment.class.getSimpleName();
@@ -49,12 +52,16 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
 
     private String authKey;
 
+    boolean mResponse = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_switch, container, false);
 
         boilerID = getActivity().getIntent().getIntExtra("boilerID", 0);
+
+        // TODO: see placement of this db query
 
         RemoilerDbHelper dbHelper = new RemoilerDbHelper(getActivity());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -128,13 +135,25 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     private void changeStatus() {
-        mStatus = 1 - mStatus;
+        SweetAlertDialog loadingDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE)
+                .setTitleText("Just a sec..");
+        loadingDialog.show();
 
-        ChangeStatusTask changeStatusTask = new ChangeStatusTask();
+        ChangeStatusTask changeStatusTask = new ChangeStatusTask(getActivity());
         String[] params = {"status="+String.valueOf(mStatus),"key=" + authKey};
+
+        changeStatusTask.delegate = this;
         changeStatusTask.execute(params);
-        // TODO: Handle Bad response;
-        // TODO: update server with new status.
+
+
+        if (changeStatusTask.getStatus() == AsyncTask.Status.FINISHED) {
+            loadingDialog.dismiss();
+            if (mResponse)
+                mStatus = 1 - mStatus;
+        }
+
+        // TODO: check if GOOD doesn't fall into bad response.
+        // TODO: Check if Bad response well;
     }
 
     private void setButtonByStatus() {
@@ -163,8 +182,6 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public android.support.v4.content.Loader<Integer> onCreateLoader(int id, Bundle args) {
-        //TODO: see placement of this database query
-
         return new StatusLoader(getActivity(), ServerQueries.createURL(ServerQueries.PATH_GET_STATUS), authKey);
     }
 
@@ -189,4 +206,8 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
 
     }
 
+    @Override
+    public void postResult(Boolean response) {
+        mResponse = response;
+    }
 }

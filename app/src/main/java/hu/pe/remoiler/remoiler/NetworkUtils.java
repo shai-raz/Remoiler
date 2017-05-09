@@ -12,6 +12,8 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
+import javax.net.ssl.HttpsURLConnection;
+
 /**
  * Responsible for Network Connections to the server
  */
@@ -36,7 +38,7 @@ public final class NetworkUtils {
     }
 
     static boolean executeURL(URL queryUrl, String... params) throws IOException {
-        HttpURLConnection urlConnection = null;
+        HttpsURLConnection urlConnection = null;
         InputStream inputStream = null;
 
         Log.i(LOG_TAG, "queryUrl=" + queryUrl);
@@ -44,7 +46,7 @@ public final class NetworkUtils {
 
         try {
             // Making the connection with the URL, using "POST" request method
-            urlConnection = (HttpURLConnection) queryUrl.openConnection();
+            urlConnection = (HttpsURLConnection) queryUrl.openConnection();
             urlConnection.setReadTimeout(3000);
             urlConnection.setConnectTimeout(3000);
             urlConnection.setRequestMethod("POST");

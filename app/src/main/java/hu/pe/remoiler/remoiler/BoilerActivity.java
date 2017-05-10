@@ -1,23 +1,40 @@
 package hu.pe.remoiler.remoiler;
 
 
+import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
+import android.net.wifi.SupplicantState;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import hu.pe.remoiler.remoiler.data.ScheduleContract.ScheduleEntry;
 import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
 
 public class BoilerActivity extends AppCompatActivity {
 
+    private final static String LOG_TAG = BoilerActivity.class.getSimpleName();
+
     String boilerName = "";
     int boilerID;
+
+    Dialog wifiDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +52,36 @@ public class BoilerActivity extends AppCompatActivity {
 
             //mNameEdit.setText(mBoilerName, TextView.BufferType.EDITABLE);
         }*/
+
+        WifiManager wifiMgr = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
+        if (wifiMgr.isWifiEnabled()) { // Wi-Fi adapter is ON
+
+            WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
+
+            if( wifiInfo.getNetworkId() == -1 ){
+                Log.i(LOG_TAG, "Wifi state: No Access point."); // Not connected to an access point
+            } else {
+                Log.i(LOG_TAG, "Wifi state: Online."); // Connected to an access point
+            }
+        }
+        else {
+            Log.i(LOG_TAG, "Wifi state: Adapter is OFF."); // Wi-Fi adapter is OFF
+        }
+
+        //Log.i(LOG_TAG, "Wifi State: " + supState);
+
+        /*wifiDialog = new Dialog(this);
+        wifiDialog.setContentView(R.layout.dialog_wifi);
+        wifiDialog.setTitle("Wifi information");
+        Button wifiSaveButton = (Button) wifiDialog.findViewById(R.id.wifi_save_button);
+        wifiSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                wifiDialog.dismiss();
+            }
+        });
+        wifiDialog.show();*/
 
         // Create the ViewPager object
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);

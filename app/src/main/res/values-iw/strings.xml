@@ -39,4 +39,6 @@
     <string name="qr_permission_camera_rationale">גישת מצלמה נצרכת בשביל זיהוי.</string>
     <string name="qr_scan_barcode_button">סרוק ברקוד</string>
     <string name="boiler_editor_add_with_qr">סרוק מפתח QR</string>
+    <string name="boiler_error_make_sure_remoiler_is_connected">אנא וודא כי הרימויילר מחובר לוי-פי ונסה שנית.</string>
+    <string name="boiler_error_remoiler_is_offline">הרימויילר כבוי.</string>
 </resources>

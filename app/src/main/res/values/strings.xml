@@ -24,6 +24,8 @@
     <!-- Boiler Activity -->
     <string name="boiler_error_no_internet_connection">No internet connection!</string>
     <string name="boiler_error_check_your_connection">Check your connection and try again.</string>
+    <string name="boiler_error_remoiler_is_offline">Remoiler is offline.</string>
+    <string name="boiler_error_make_sure_remoiler_is_connected">Please make sure remoiler is connected to Wi-Fi and try again.</string>
 
     <!-- Schedule Fragment -->
     <string name="schedule_start_time">start time:</string>

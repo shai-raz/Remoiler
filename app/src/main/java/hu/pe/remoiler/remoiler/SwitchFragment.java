@@ -193,6 +193,11 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
                     .setTitleText(getString(R.string.boiler_error_cant_get_data_from_server))
                     .setContentText(getString(R.string.boiler_error_please_try_again_later))
                     .show();
+        } else if (status == -1) {
+            new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText(getString(R.string.boiler_error_remoiler_is_offline))
+                    .setContentText(getString(R.string.boiler_error_make_sure_remoiler_is_connected))
+                    .show();
         } else {
             setStatus(status);
             setButtonByStatus();

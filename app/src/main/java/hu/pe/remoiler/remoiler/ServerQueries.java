@@ -33,7 +33,7 @@ final class ServerQueries {
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
         final String STATUS_PATH = "status";
-        TODO: Get authkey from SharedPreferences.
+
         String authKey = "shai"; // md5(sha1(b7:30:cf:f1:7d:b4))
 
         // Append path /status/{key}

@@ -1,5 +1,8 @@
 package hu.pe.remoiler.remoiler;
 
+import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -15,13 +18,42 @@ import java.util.Arrays;
 /**
  * Responsible for Network Connections to the server
  */
-public final class NetworkUtils {
+final class NetworkUtils {
 
     final private static String LOG_TAG = NetworkUtils.class.getSimpleName();
 
     // Uncallable constructor
     private NetworkUtils() {}
 
+    /**
+     * Checks if connected to an online Wi-Fi, and returns its SSID.
+     * @param context Activity context.
+     * @return null not online, SSID (String) if online.
+     */
+    static String getWifiSSID(Context context) {
+        WifiManager wifiMgr = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
+        if (wifiMgr.isWifiEnabled()) { // Wi-Fi adapter is ON
+
+            WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
+
+            if( wifiInfo.getNetworkId() == -1 ){
+                Log.i(LOG_TAG, "Wifi state: No Access point.");
+                return null; // Not connected to an access point
+            }
+            Log.i(LOG_TAG, "Wifi state: Online.");
+            return wifiInfo.getSSID(); // Connected to an access point
+        }
+        else {
+            Log.i(LOG_TAG, "Wifi state: Adapter is OFF.");
+            return null; // Wi-Fi adapter is OFF
+        }
+    }
+
+    /**
+     * Checks wither internet is reachable.
+     * @return Boolean for wither internet is reachable or not.
+     */
     static boolean isOnline() {
         Runtime runtime = Runtime.getRuntime();
         try {
@@ -29,12 +61,18 @@ public final class NetworkUtils {
             int     exitValue = ipProcess.waitFor();
             return (exitValue == 0);
         }
-        catch (IOException e)          { e.printStackTrace(); }
-        catch (InterruptedException e) { e.printStackTrace(); }
+        catch (IOException | InterruptedException e) { e.printStackTrace(); }
 
         return false;
     }
 
+    /**
+     * Used to execute a given URL address with given params using POST method.
+     * @param queryUrl Full URL address that should be executed.
+     * @param params The parameters to be sent through POST.
+     * @return Returns boolean for wither the URL was executed successfully.
+     * @throws IOException inputStream.close() IOException
+     */
     static boolean executeURL(URL queryUrl, String... params) throws IOException {
         HttpURLConnection urlConnection = null;
         InputStream inputStream = null;

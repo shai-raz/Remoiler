@@ -21,6 +21,7 @@ public class BoilerAdapter extends CursorAdapter {
 
     private SparseBooleanArray mSelectedItemsIds;
     private ArrayList<?> item_modelArrayList;
+    private HashMap<Integer, Boolean> mSelection = new HashMap<Integer, Boolean>();
 
 
     public BoilerAdapter(Context context, Cursor c) {
@@ -107,6 +108,11 @@ public class BoilerAdapter extends CursorAdapter {
     //Return all selected ids
     public SparseBooleanArray getSelectedIds() {
         return mSelectedItemsIds;
+    }
+
+    public boolean isPositionChecked(int position) {
+        Boolean result = mSelection.get(position);
+        return result == null ? false : result;
     }
 
 }

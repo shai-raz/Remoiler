@@ -31,10 +31,10 @@ public class BoilerActivity extends AppCompatActivity {
 
     private final static String LOG_TAG = BoilerActivity.class.getSimpleName();
 
-    String boilerName = "";
+    //String boilerName = "";
     int boilerID;
 
-    Dialog wifiDialog;
+    //Dialog wifiDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,31 +45,36 @@ public class BoilerActivity extends AppCompatActivity {
             boilerID = getIntent().getIntExtra("id", 0);
         }
 
+
+
         Toast.makeText(this, "boiler id is" + boilerID, Toast.LENGTH_SHORT).show();
 
-        /*if (getIntent().getExtras() != null) {
-            mBoilerName = getIntent().getStringExtra("name");
+        /* TODO: Check if this boiler is already configured with Wi-Fi connection.
+                 Check if connected to wifi network, and get its SSID. ( NetworkUtils.getWifiSSID() )
+                 Send to new activity that will take SSID & Pass from user.
+                 Send wifi details through SmartConfig / Bluetooth / ? */
 
-            //mNameEdit.setText(mBoilerName, TextView.BufferType.EDITABLE);
-        }*/
+        /*String wifiSSID = NetworkUtils.getWifiSSID(this);
+        if (wifiSSID != null) {}
 
-        WifiManager wifiMgr = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-
-        if (wifiMgr.isWifiEnabled()) { // Wi-Fi adapter is ON
-
-            WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
-
-            if( wifiInfo.getNetworkId() == -1 ){
-                Log.i(LOG_TAG, "Wifi state: No Access point."); // Not connected to an access point
-            } else {
-                Log.i(LOG_TAG, "Wifi state: Online."); // Connected to an access point
-            }
-        }
-        else {
-            Log.i(LOG_TAG, "Wifi state: Adapter is OFF."); // Wi-Fi adapter is OFF
-        }
-
-        //Log.i(LOG_TAG, "Wifi State: " + supState);
+        new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
+                .setTitleText("First usage!")
+                .setContentText("First time using this boiler, is your remoiler set up with Wi-Fi?")
+                .setConfirmText("No, set it up now.")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        // Intent to wifi setup.
+                    }
+                })
+                .setCancelText("Yes.")
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                    }
+                })
+                .show();*/
 
         /*wifiDialog = new Dialog(this);
         wifiDialog.setContentView(R.layout.dialog_wifi);

@@ -32,7 +32,7 @@ class StatusLoader extends android.support.v4.content.AsyncTaskLoader<Integer> {
             String response = NetworkUtils.getStringFromURL(mUrl, mKey);
             Log.i(LOG_TAG, "response: " + response);
 
-            if (response == null) return null;
+            if (response == null || response.equals("")) return null;
             return Integer.parseInt(response);
 
             /*if (response == null) return null;

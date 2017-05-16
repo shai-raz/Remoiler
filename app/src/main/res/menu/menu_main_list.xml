@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/menu_main_edit"
+    <item android:id="@+id/main_menu_edit"
         android:icon="@android:drawable/ic_menu_edit"
         app:showAsAction="ifRoom|withText"
         android:title="@string/menu_edit"
         android:titleCondensed="@string/menu_edit" />
 
     <item
-        android:id="@+id/item_delete"
+        android:id="@+id/main_menu_delete"
         android:icon="@android:drawable/ic_menu_delete"
         app:showAsAction="ifRoom|withText"
         android:title="@string/menu_delete"

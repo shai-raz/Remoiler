@@ -8,8 +8,7 @@
     <ListView
         android:id="@+id/main_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:longClickable="true"/>
+        android:layout_height="match_parent"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

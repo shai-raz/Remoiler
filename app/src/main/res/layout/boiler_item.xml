@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/activity_margin"
-    android:longClickable="true"
     android:descendantFocusability="blocksDescendants"
     android:background="?attr/listChoiceBackgroundIndicator"
     android:checkMark="?android:attr/listChoiceIndicatorMultiple">
@@ -19,8 +18,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:contentDescription="boiler_hot_icon"
-        />
+        android:contentDescription="boiler_hot_icon"/>
 
     <TextView
         android:id="@+id/boiler_name"
@@ -33,7 +31,7 @@
         android:textColor="@color/boiler_editor_name_color"
         android:layout_toRightOf="@id/boiler_icon_hot"
         android:layout_toEndOf="@id/boiler_icon_hot"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true" />
 
     <ImageView
         android:id="@+id/boiler_edit_icon"
@@ -46,5 +44,5 @@
         android:layout_alignEnd="@id/boiler_name"
         android:layout_centerVertical="true"
         android:contentDescription="boiler_edit_icon"
-        android:clickable="true"/>
+        android:clickable="true" />
 </RelativeLayout>

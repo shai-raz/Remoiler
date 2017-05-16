@@ -3,12 +3,16 @@ package hu.pe.remoiler.remoiler;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -19,14 +23,19 @@ import hu.pe.remoiler.remoiler.data.BoilerContract.BoilerEntry;
 
 public class BoilerAdapter extends CursorAdapter {
 
+    private static final String LOG_TAG = BoilerAdapter.class.getSimpleName();
+
     private SparseBooleanArray mSelectedItemsIds;
     private ArrayList<?> item_modelArrayList;
     private HashMap<Integer, Boolean> mSelection = new HashMap<Integer, Boolean>();
+    private Context mContext;
+    private boolean isActionMode = false;
 
 
     public BoilerAdapter(Context context, Cursor c) {
         super(context, c, 0);
         mSelectedItemsIds = new SparseBooleanArray();
+        mContext = context;
 
     }
 
@@ -36,12 +45,36 @@ public class BoilerAdapter extends CursorAdapter {
         return LayoutInflater.from(context).inflate(R.layout.boiler_item, parent, false);
     }
 
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View v = super.getView(position, convertView, parent);//let the adapter handle setting up the row views
+        v.setBackgroundColor(ContextCompat.getColor(mContext,android.R.color.background_light)); //default color
+
+        if (mSelection.get(position) != null) {
+            v.setBackgroundColor(ContextCompat.getColor(mContext,android.R.color.holo_blue_light));// this is a selected position so make it red
+        }
+
+        /*ListView listView = (ListView) parent.findViewById(R.id.main_list_view);
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.i(LOG_TAG, "OnItemLongClick() " + nr);
+                if (nr == 0) {
+                    listView.setItemChecked(position, !boilerAdapter.isPositionChecked(position));
+                    return true;
+                }
+                return false;
+            }
+        });*/
+        return v;
+    }
+
     // Bind all the views into the layout
     @Override
-    public void bindView(View view, final Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, final Cursor cursor) {
         // Declare Widgets
         TextView boilerNameTv = (TextView) view.findViewById(R.id.boiler_name);
-        ImageView editIcon = (ImageView) view.findViewById(R.id.boiler_edit_icon);
+        //ImageView editIcon = (ImageView) view.findViewById(R.id.boiler_edit_icon);
 
         // Extract from the cursor
         final String boilerName = cursor.getString(cursor.getColumnIndex(BoilerEntry.COLUMN_BOILER_NAME));
@@ -51,7 +84,10 @@ public class BoilerAdapter extends CursorAdapter {
         // Populate widgets with cursor's data
         boilerNameTv.setText(boilerName);
 
-        editIcon.setOnClickListener(new View.OnClickListener() {
+        view.setFocusable(false);
+        //view.setLongClickable(true);
+
+        /*editIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(context, mBoilerName, Toast.LENGTH_SHORT).show();
@@ -61,58 +97,54 @@ public class BoilerAdapter extends CursorAdapter {
                 intent.putExtra("boilerKey", boilerKey);
                 context.startActivity(intent);
             }
-        });
+        });*/
 
-        view.setOnClickListener(new View.OnClickListener() {
+        /*view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, BoilerActivity.class);
-                intent.putExtra("boilerID", boilerID);
-                context.startActivity(intent);
+                if (!isActionMode) {
+                    Intent intent = new Intent(context, BoilerActivity.class);
+                    intent.putExtra("boilerID", boilerID);
+                    context.startActivity(intent);
+                }
             }
-        });
+        });*/
+    }
+
+    public void disableOnClick() {
+        isActionMode = true;
+    }
+
+    public void enableOnClick() {
+        isActionMode = false;
     }
 
     /***
      * Methods required for do selections, remove selections, etc.
      */
 
-    //Toggle selection methods
-    public void toggleSelection(int position) {
-        selectView(position, !mSelectedItemsIds.get(position));
-    }
-
-
-    //Remove selected selections
-    public void removeSelection() {
-        mSelectedItemsIds = new SparseBooleanArray();
+    public void setNewSelection(int position, boolean value) {
+        mSelection.put(position, value);
         notifyDataSetChanged();
-    }
-
-
-    //Put or delete selected position into SparseBooleanArray
-    public void selectView(int position, boolean value) {
-        if (value)
-            mSelectedItemsIds.put(position, value);
-        else
-            mSelectedItemsIds.delete(position);
-
-        notifyDataSetChanged();
-    }
-
-    //Get total selected count
-    public int getSelectedCount() {
-        return mSelectedItemsIds.size();
-    }
-
-    //Return all selected ids
-    public SparseBooleanArray getSelectedIds() {
-        return mSelectedItemsIds;
     }
 
     public boolean isPositionChecked(int position) {
         Boolean result = mSelection.get(position);
         return result == null ? false : result;
+    }
+
+    public Set<Integer> getCurrentCheckedPosition() {
+        return mSelection.keySet();
+    }
+
+    public void removeSelection(int position) {
+        mSelection.remove(position);
+        notifyDataSetChanged();
+    }
+
+    public void clearSelection() {
+        mSelection = new HashMap<Integer, Boolean>();
+        notifyDataSetChanged();
     }
 
 }

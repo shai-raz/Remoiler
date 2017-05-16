@@ -24,12 +24,12 @@ import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
 
 public class MainActivity extends AppCompatActivity {
 
-    final private String LOG_TAG = this.getClass().getSimpleName();
+    final static private String LOG_TAG = MainActivity.class.getSimpleName();
 
-    final Context context = this;
     private ListView listView;
     private BoilerAdapter boilerAdapter;
-    private ActionMode mActionMode;
+    private int nr = 0;
+    private boolean isActionMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +41,23 @@ public class MainActivity extends AppCompatActivity {
         listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-
+                if (checked) {
+                    nr++;
+                    boilerAdapter.setNewSelection(position, checked);
+                } else {
+                    nr--;
+                    boilerAdapter.removeSelection(position);
+                }
+                mode.setTitle(nr + " selected");
             }
 
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                nr = 0;
                 MenuInflater inflater = getMenuInflater();
                 inflater.inflate(R.menu.menu_main_list, menu);
+                boilerAdapter.disableOnClick();
+                isActionMode = true;
                 return true;
             }
 
@@ -58,20 +68,55 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.main_menu_delete:
+                        nr = 0;
+                        boilerAdapter.clearSelection();
+                        mode.finish();
+                        break;
+
+                    case R.id.main_menu_edit:
+                        nr = 0;
+                        boilerAdapter.clearSelection();
+                        mode.finish();
+                        break;
+                }
                 return false;
             }
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
+                nr = 0;
+                boilerAdapter.clearSelection();
+                boilerAdapter.enableOnClick();
+                isActionMode = false;
+            }
+        });
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.i(LOG_TAG, "OnItemClick() " + nr);
+                if (isActionMode) {
+                    if (nr != 0) {
+                        listView.setItemChecked(position, !boilerAdapter.isPositionChecked(position));
+                    }
+                } else {
+
+                }
             }
         });
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                listView.setItemChecked(position, !boilerAdapter.isPositionChecked(position));
+                Log.i(LOG_TAG, "OnItemLongClick() " + nr);
+                if (nr == 0) {
+                    listView.setItemChecked(position, !boilerAdapter.isPositionChecked(position));
+                    return true;
+                }
                 return false;
+
             }
         });
 
@@ -106,10 +151,6 @@ public class MainActivity extends AppCompatActivity {
     }*/
 
     //Set action mode null after use
-    public void setNullToActionMode() {
-        if (mActionMode != null)
-            mActionMode = null;
-    }
 
     private void populateList() {
         // To access our database, we instantiate our subclass of SQLiteOpenHelper

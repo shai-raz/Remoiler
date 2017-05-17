@@ -102,7 +102,13 @@ public class MainActivity extends AppCompatActivity {
                         listView.setItemChecked(position, !boilerAdapter.isPositionChecked(position));
                     }
                 } else {
-
+                    Log.i(LOG_TAG, String.valueOf(parent.getItemAtPosition(position)));
+                    Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                    cursor.getInt(cursor.getColumnIndex(BoilerEntry._ID));
+                    Toast.makeText(MainActivity.this, cursor.getInt(cursor.getColumnIndex(BoilerEntry._ID)), Toast.LENGTH_SHORT).show();
+                    /*Intent intent = new Intent(MainActivity.this, BoilerActivity.class);
+                    intent.putExtra("boilerID", boilerID);
+                    startActivity(intent);*/
                 }
             }
         });

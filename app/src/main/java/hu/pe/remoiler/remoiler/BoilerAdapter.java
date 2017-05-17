@@ -30,13 +30,13 @@ public class BoilerAdapter extends CursorAdapter {
     private HashMap<Integer, Boolean> mSelection = new HashMap<Integer, Boolean>();
     private Context mContext;
     private boolean isActionMode = false;
+    private int mTest;
 
 
     public BoilerAdapter(Context context, Cursor c) {
         super(context, c, 0);
         mSelectedItemsIds = new SparseBooleanArray();
         mContext = context;
-
     }
 
     // Set the layout we'll be using as the item view
@@ -80,6 +80,7 @@ public class BoilerAdapter extends CursorAdapter {
         final String boilerName = cursor.getString(cursor.getColumnIndex(BoilerEntry.COLUMN_BOILER_NAME));
         final int boilerID = cursor.getInt(cursor.getColumnIndex(BoilerEntry._ID));
         final String boilerKey = cursor.getString(cursor.getColumnIndex(BoilerEntry.COLUMN_BOILER_KEY));
+        mTest = boilerID;
 
         // Populate widgets with cursor's data
         boilerNameTv.setText(boilerName);
@@ -102,6 +103,7 @@ public class BoilerAdapter extends CursorAdapter {
         /*view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(LOG_TAG, "onClick() boilerID: " + boilerID);
                 if (!isActionMode) {
                     Intent intent = new Intent(context, BoilerActivity.class);
                     intent.putExtra("boilerID", boilerID);
@@ -122,6 +124,7 @@ public class BoilerAdapter extends CursorAdapter {
     /***
      * Methods required for do selections, remove selections, etc.
      */
+
 
     public void setNewSelection(int position, boolean value) {
         mSelection.put(position, value);

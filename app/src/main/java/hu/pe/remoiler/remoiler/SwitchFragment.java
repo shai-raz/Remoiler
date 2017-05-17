@@ -189,15 +189,27 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
         Log.i(LOG_TAG, "status: " + status);
         mProgressBar.setVisibility(ProgressBar.GONE);
         if (status == null) {
-            new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+            SweetAlertDialog badResponseDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                     .setTitleText(getString(R.string.boiler_error_cant_get_data_from_server))
-                    .setContentText(getString(R.string.boiler_error_please_try_again_later))
-                    .show();
+                    .setContentText(getString(R.string.boiler_error_please_try_again_later));
+            badResponseDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    getActivity().finish();
+                }
+            });
+            badResponseDialog.show();
         } else if (status == -1) {
-            new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+            SweetAlertDialog remoilerOfflineDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                     .setTitleText(getString(R.string.boiler_error_remoiler_is_offline))
-                    .setContentText(getString(R.string.boiler_error_make_sure_remoiler_is_connected))
-                    .show();
+                    .setContentText(getString(R.string.boiler_error_make_sure_remoiler_is_connected));
+            remoilerOfflineDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    getActivity().finish();
+                }
+            });
+            remoilerOfflineDialog.show();
         } else {
             setStatus(status);
             setButtonByStatus();

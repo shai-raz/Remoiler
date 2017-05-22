@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -19,7 +20,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import hu.pe.remoiler.remoiler.data.BoilerContract.BoilerEntry;
 import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
@@ -82,14 +87,46 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                Set<Integer> checked;
+                Object[] checkedPosArr;
+                Integer checkedPos;
+                Cursor cursor;
+
                 switch (item.getItemId()) {
-                    case R.id.main_menu_delete:
+                    case R.id.main_menu_delete: // deleting boilers
+                        RemoilerDbHelper mDbHelper = new RemoilerDbHelper(MainActivity.this);
+                        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+                        checked = boilerAdapter.getCurrentCheckedPosition();
+
+                        for (Integer currentPos : checked) {
+                            //Log.i(LOG_TAG, "current pos: " + currentPos);
+                            cursor = (Cursor) listView.getAdapter().getItem(currentPos);
+                            int currentID = cursor.getInt(cursor.getColumnIndex(BoilerEntry._ID));
+
+                            // delete single row
+                            db.delete(BoilerEntry.TABLE_NAME, BoilerEntry._ID + "=?", new String[] { String.valueOf(currentID) });
+                        }
+
                         nr = 0;
                         boilerAdapter.clearSelection();
                         mode.finish();
                         break;
 
-                    case R.id.main_menu_edit:
+                    case R.id.main_menu_edit: // editing a single boiler
+                        checked =  boilerAdapter.getCurrentCheckedPosition();
+                        checkedPos = checked.iterator().next();
+                        cursor = (Cursor) listView.getAdapter().getItem(checkedPos);
+
+                        String boilerName = cursor.getString(cursor.getColumnIndex(BoilerEntry.COLUMN_BOILER_NAME));
+                        int boilerID = cursor.getInt(cursor.getColumnIndex(BoilerEntry._ID));
+                        String boilerKey = cursor.getString(cursor.getColumnIndex(BoilerEntry.COLUMN_BOILER_KEY));
+
+                        Intent intent = new Intent(MainActivity.this, BoilerEditor.class);
+                        intent.putExtra("boilerID", boilerID);
+                        intent.putExtra("boilerName", boilerName);
+                        intent.putExtra("boilerKey", boilerKey);
+                        startActivity(intent);
                         nr = 0;
                         boilerAdapter.clearSelection();
                         mode.finish();
@@ -157,22 +194,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-   /* private void onListItemSelect(int position) {
-        boilerAdapter.toggleSelection(position);//Toggle the selection
-        boolean hasCheckedItems = boilerAdapter.getSelectedCount() > 0;//Check if any items are already selected or not
-        if (hasCheckedItems && mActionMode == null)
-            // there are some selected items, start the actionMode
-            mActionMode = (this.startSupportActionMode(new Toolbar_ActionMode_Callback(this, null, boilerAdapter, item_models, true));
-        else if (!hasCheckedItems && mActionMode != null)
-            // there no selected items, finish the actionMode
-            mActionMode.finish();
-        if (mActionMode != null)
-            //set action mode title on item selection
-            mActionMode.setTitle(String.valueOf(boilerAdapter
-                    .getSelectedCount()) + " selected");
-    }*/
-
-    //Set action mode null after use
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

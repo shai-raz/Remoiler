@@ -113,6 +113,11 @@ public class BoilerAdapter extends CursorAdapter {
         });*/
     }
 
+    @Override
+    public Object getItem(int position) {
+        return super.getItem(position);
+    }
+
     public void disableOnClick() {
         isActionMode = true;
     }

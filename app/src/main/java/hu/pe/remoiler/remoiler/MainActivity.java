@@ -19,6 +19,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.HashMap;
+
 import hu.pe.remoiler.remoiler.data.BoilerContract.BoilerEntry;
 import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
 
@@ -48,6 +50,11 @@ public class MainActivity extends AppCompatActivity {
                     nr--;
                     boilerAdapter.removeSelection(position);
                 }
+
+                // Trigger onPrepareActionMode to hide/show Edit icon
+                mode.invalidate();
+
+                // Show how many are selected
                 mode.setTitle(nr + " selected");
             }
 
@@ -63,6 +70,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                if (nr > 1) {
+                    menu.findItem(R.id.main_menu_edit).setVisible(false);
+                    return true;
+                } else if (nr == 1) {
+                    menu.findItem(R.id.main_menu_edit).setVisible(true);
+                    return true;
+                }
                 return false;
             }
 
@@ -97,18 +111,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.i(LOG_TAG, "OnItemClick() " + nr);
-                if (isActionMode) {
+                /*Cursor cursor = (Cursor) listView.getAdapter().getItem(position);
+                Log.i(LOG_TAG, "boilerName: " + cursor.getString(cursor.getColumnIndex(BoilerEntry.COLUMN_BOILER_NAME)));*/
+                if (isActionMode) { // If we're on Context Menu ActionMode, then clicking on an item won't intent to BoilerActivity, but will select the clicked.
                     if (nr != 0) {
                         listView.setItemChecked(position, !boilerAdapter.isPositionChecked(position));
                     }
-                } else {
-                    Log.i(LOG_TAG, String.valueOf(parent.getItemAtPosition(position)));
-                    Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-                    cursor.getInt(cursor.getColumnIndex(BoilerEntry._ID));
-                    Toast.makeText(MainActivity.this, cursor.getInt(cursor.getColumnIndex(BoilerEntry._ID)), Toast.LENGTH_SHORT).show();
-                    /*Intent intent = new Intent(MainActivity.this, BoilerActivity.class);
+                } else { // Clicking on item when ActionMode is off will intent to BoilerActivity
+                    // Get boiler ID from Adapter for current view
+                    int boilerID = (int) listView.getAdapter().getItemId(position);
+                    Log.i(LOG_TAG, "boilerID: " + String.valueOf(boilerID));
+
+                    Intent intent = new Intent(MainActivity.this, BoilerActivity.class);
                     intent.putExtra("boilerID", boilerID);
-                    startActivity(intent);*/
+                    startActivity(intent);
                 }
             }
         });
@@ -158,6 +174,32 @@ public class MainActivity extends AppCompatActivity {
 
     //Set action mode null after use
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        // User clicked on a menu option in the app bar overflow menu
+        switch (item.getItemId()) {
+
+            // Respond to a click on the "Insert dummy data" menu option
+            case R.id.action_insert_dummy_data:
+                insertDummyData();
+                return true;
+
+            // Respond to a click on the "Delete all entries" menu option
+            case R.id.action_delete_all_entries:
+                deleteAllEntries();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void populateList() {
         // To access our database, we instantiate our subclass of SQLiteOpenHelper
         // and pass the context, which is the current activity.
@@ -195,32 +237,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        // User clicked on a menu option in the app bar overflow menu
-        switch (item.getItemId()) {
-
-            // Respond to a click on the "Insert dummy data" menu option
-            case R.id.action_insert_dummy_data:
-                insertDummyData();
-                return true;
-
-            // Respond to a click on the "Delete all entries" menu option
-            case R.id.action_delete_all_entries:
-                deleteAllEntries();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     // Insert dummy boiler
     private void insertDummyData() {
         RemoilerDbHelper mDbHelper = new RemoilerDbHelper(this);
@@ -250,4 +266,6 @@ public class MainActivity extends AppCompatActivity {
 
         db.close();
     }
+
+    //private void edit
 }

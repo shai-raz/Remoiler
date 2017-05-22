@@ -7,6 +7,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -29,7 +31,7 @@ import java.util.Set;
 import hu.pe.remoiler.remoiler.data.BoilerContract.BoilerEntry;
 import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks {
 
     final static private String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -42,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        LoaderManager loaderManager = getSupportLoaderManager();
+        //loaderManager.initLoader(1, null, null);
 
         populateList();
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -107,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
                             // delete single row
                             db.delete(BoilerEntry.TABLE_NAME, BoilerEntry._ID + "=?", new String[] { String.valueOf(currentID) });
                         }
+
+                        boilerAdapter.notifyDataSetChanged();
 
                         nr = 0;
                         boilerAdapter.clearSelection();
@@ -288,5 +295,22 @@ public class MainActivity extends AppCompatActivity {
         db.close();
     }
 
-    //private void edit
+    /*
+    Loader methods
+     */
+    @Override
+    public Loader onCreateLoader(int id, Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader loader, Object data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader loader) {
+        //boilerAdapter.notifyDataSetChanged();
+    }
+
 }

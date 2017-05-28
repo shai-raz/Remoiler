@@ -39,14 +39,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private BoilerAdapter boilerAdapter;
     private int nr = 0;
     private boolean isActionMode = false;
+    private LoaderManager loaderManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        LoaderManager loaderManager = getSupportLoaderManager();
-        //loaderManager.initLoader(1, null, null);
+        loaderManager = getSupportLoaderManager();
+        loaderManager.initLoader(1, null, this);
 
         populateList();
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -196,9 +197,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
-
-        // TODO: finish Context Menu ACTION MODE
-
     }
 
 
@@ -300,17 +298,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      */
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
+        Log.i(LOG_TAG, "onCreateLoader()");
         return null;
     }
 
     @Override
     public void onLoadFinished(Loader loader, Object data) {
-
+        Log.i(LOG_TAG, "onLoadFinished()");
+        boilerAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onLoaderReset(Loader loader) {
-        //boilerAdapter.notifyDataSetChanged();
+        Log.i(LOG_TAG, "onLoaderReset()");
+        boilerAdapter.notifyDataSetChanged();
+        loaderManager.destroyLoader(1);
+        loaderManager.initLoader(1, null, this);
     }
 
 }

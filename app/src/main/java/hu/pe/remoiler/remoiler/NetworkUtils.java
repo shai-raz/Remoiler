@@ -21,6 +21,9 @@ import java.util.Arrays;
 final class NetworkUtils {
 
     final private static String LOG_TAG = NetworkUtils.class.getSimpleName();
+    final static String WIFI_NOT_CONNECTED = "0";
+    final static String WIFI_ADAPTER_OFF = "-1";
+    final static int WIFI_SOCKET_PORT = 62157;
 
     // Uncallable constructor
     private NetworkUtils() {}
@@ -37,16 +40,16 @@ final class NetworkUtils {
 
             WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
 
-            if( wifiInfo.getNetworkId() == -1 ){
+            if(wifiInfo.getNetworkId() == -1) {
                 Log.i(LOG_TAG, "Wifi state: No Access point.");
-                return null; // Not connected to an access point
+                return WIFI_NOT_CONNECTED; // Not connected to an access point
             }
             Log.i(LOG_TAG, "Wifi state: Online.");
             return wifiInfo.getSSID(); // Connected to an access point
         }
         else {
             Log.i(LOG_TAG, "Wifi state: Adapter is OFF.");
-            return null; // Wi-Fi adapter is OFF
+            return WIFI_ADAPTER_OFF; // Wi-Fi adapter is OFF
         }
     }
 

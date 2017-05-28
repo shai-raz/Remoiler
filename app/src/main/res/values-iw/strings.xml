@@ -41,4 +41,5 @@
     <string name="boiler_editor_add_with_qr">סרוק מפתח QR</string>
     <string name="boiler_error_make_sure_remoiler_is_connected">אנא וודא כי הרימויילר מחובר לוי-פי ונסה שנית.</string>
     <string name="boiler_error_remoiler_is_offline">הרימויילר כבוי.</string>
+    <string name="activity_wifi_setup_label">הגדרת Wi-Fi</string>
 </resources>

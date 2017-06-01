@@ -18,6 +18,7 @@ final class ServerQueries {
 
     public final static int PATH_GET_STATUS = 601;
     public final static int PATH_CHANGE_STATUS = 602;
+    public final static int PATH_SCHEDULE = 603;
 
     // Uncallable constructor
     private ServerQueries() {}
@@ -59,9 +60,6 @@ final class ServerQueries {
         Uri baseUri = Uri.parse(BASE_SERVER_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
-        //Temporary Auth Key
-        //String authKey = "raz";
-
         switch (path) {
             case PATH_GET_STATUS:
                 uriBuilder.appendPath("status");
@@ -69,6 +67,8 @@ final class ServerQueries {
             case PATH_CHANGE_STATUS:
                 uriBuilder.appendPath("change_status");
                 break;
+            case PATH_SCHEDULE:
+                uriBuilder.appendPath("schedule");
         }
 
         try {
@@ -79,6 +79,7 @@ final class ServerQueries {
         }
 
         if (queryUrl == null) return null;
+        Log.i(LOG_TAG, "queryUrl: " + queryUrl);
         return queryUrl;
     }
 }

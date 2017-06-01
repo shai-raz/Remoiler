@@ -13,7 +13,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * Responsible for Network Connections to the server
@@ -121,20 +127,36 @@ final class NetworkUtils {
                 inputStream.close();
             }
         }
-
         return true;
     }
 
     // Returns String from given URL
     public static String getStringFromURL(URL queryUrl, String key) throws IOException {
-        HttpURLConnection urlConnection = null;
+        HttpsURLConnection urlConnection = null;
         InputStream inputStream = null;
         String stringResponse = "";
 
+        SSLContext sslcontext = null;
+        try {
+            sslcontext = SSLContext.getInstance("TLSv1");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            sslcontext.init(null, null, null);
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }
+        SSLSocketFactory NoSSLv3Factory = new NoSSLv3SocketFactory(sslcontext.getSocketFactory());
+
+        HttpsURLConnection.setDefaultSSLSocketFactory(NoSSLv3Factory);
+
+
         try {
             // Making the connection with the URL, using "GET" request method
-            urlConnection = (HttpURLConnection) queryUrl.openConnection();
-            urlConnection.setReadTimeout(3000);
+            urlConnection = (HttpsURLConnection) queryUrl.openConnection();
+            urlConnection.setReadTimeout(9000);
             urlConnection.setConnectTimeout(3000);
             urlConnection.setRequestMethod("POST");
             urlConnection.setDoInput(true);
@@ -149,10 +171,13 @@ final class NetworkUtils {
 
             urlConnection.connect();
 
+            //Log.i(LOG_TAG, "response code: " + String.valueOf(urlConnection.getResponseCode()));
+
             // Checking if the response code is OK
             if (urlConnection.getResponseCode() == 200) {
                 inputStream = urlConnection.getInputStream();
                 stringResponse = readFromStream(inputStream);
+                Log.i(LOG_TAG, "string response: " + stringResponse);
             } else {
                 Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
             }

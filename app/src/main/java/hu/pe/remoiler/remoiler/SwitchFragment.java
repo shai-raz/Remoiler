@@ -195,7 +195,7 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
             badResponseDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    getActivity().finish();
+                    //getActivity().finish();
                 }
             });
             badResponseDialog.show();
@@ -206,7 +206,7 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
             remoilerOfflineDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    getActivity().finish();
+                    //getActivity().finish();
                 }
             });
             remoilerOfflineDialog.show();

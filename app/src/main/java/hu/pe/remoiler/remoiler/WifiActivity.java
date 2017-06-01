@@ -51,6 +51,7 @@ public class WifiActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Send Packets to air with SSID&Pass
+                // TODO: Send packets to air? Communicate with Bluetooth? Make Pi become an AccessPoint and then send it the wifi details?
                 // TODO: Encrypt sent packets
                 try {
                     DatagramSocket dgSocket = new DatagramSocket(NetworkUtils.WIFI_SOCKET_PORT);
@@ -59,7 +60,7 @@ public class WifiActivity extends AppCompatActivity {
                     byte[] SSIDBytes = wifiSSID.getBytes(Charset.forName("UTF-8"));
                     byte[] PassBytes = wifiPass.getBytes(Charset.forName("UTF-8"));
 
-                    DatagramPacket dgPacket = new DatagramPacket();
+                    //DatagramPacket dgPacket = new DatagramPacket();
                 } catch (SocketException e) {
                     e.printStackTrace();
                 }

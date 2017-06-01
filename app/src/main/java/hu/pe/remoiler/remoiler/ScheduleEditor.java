@@ -1,6 +1,5 @@
 package hu.pe.remoiler.remoiler;
 
-import android.app.ActionBar;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -25,14 +24,18 @@ public class ScheduleEditor extends AppCompatActivity {
     NumberPicker endTimeMinutePicker;
     ToggleButton[] toggleDay = new ToggleButton[7];
 
-    private int boilerID;
+    private int mBoilerID;
+    private int mStartTime;
+    private int mEndTime;
+    private int[] mReturns;
+    private boolean mEditMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.schedule_editor);
 
-        boilerID = getIntent().getIntExtra("boilerID", 0);
+        mBoilerID = getIntent().getIntExtra("mBoilerID", 0);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -86,10 +89,20 @@ public class ScheduleEditor extends AppCompatActivity {
         toggleDay[5] = (ToggleButton) findViewById(R.id.toggleFriday);
         toggleDay[6] = (ToggleButton) findViewById(R.id.toggleSaturday);
 
-        // TODO: add returns (days of week)
-        // TODO: visual polish
-        // TODO: insert everything to the "schedule" table
+        long scheduleID = getIntent().getLongExtra("scheduleID", -1);
 
+        if (scheduleID != -1) {
+            mEditMode = true;
+            mStartTime = getIntent().getIntExtra("startTime", 0);
+            mEndTime = getIntent().getIntExtra("endTime", 0);
+            String stringReturns = getIntent().getStringExtra("returns");
+
+            startTimeHourPicker.setValue(Integer.parseInt(minutesInDayToHours(mStartTime)));
+
+            Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+        }
+
+        // TODO: visual polish
     }
 
     @Override
@@ -126,20 +139,20 @@ public class ScheduleEditor extends AppCompatActivity {
         ContentValues values = new ContentValues();
 
         // 'Convert' the times into minutes in day.
-        int startTime = (startTimeHourPicker.getValue() * 60) + startTimeMinutePicker.getValue();
-        int endTime = (endTimeHourPicker.getValue() * 60) + endTimeMinutePicker.getValue();
+        mStartTime = (startTimeHourPicker.getValue() * 60) + startTimeMinutePicker.getValue();
+        mEndTime = (endTimeHourPicker.getValue() * 60) + endTimeMinutePicker.getValue();
 
-        int[] returns = new int[7];
+        mReturns = new int[7];
 
         // Create an int array of selected days in week (which will be inserted into the db as a String)
         for (int i = 0; i < 7; i++) {
-            returns[i] = toggleDay[i].isChecked() ? 1 : 0;
+            mReturns[i] = toggleDay[i].isChecked() ? 1 : 0;
         }
 
-        values.put(ScheduleEntry.COLUMN_SCHEDULE_BOILER_ID, boilerID);
-        values.put(ScheduleEntry.COLUMN_SCHEDULE_START_TIME, startTime);
-        values.put(ScheduleEntry.COLUMN_SCHEDULE_END_TIME, endTime);
-        values.put(ScheduleEntry.COLUMN_SCHEDULE_RETURNS, Arrays.toString(returns));
+        values.put(ScheduleEntry.COLUMN_SCHEDULE_BOILER_ID, mBoilerID);
+        values.put(ScheduleEntry.COLUMN_SCHEDULE_START_TIME, mStartTime);
+        values.put(ScheduleEntry.COLUMN_SCHEDULE_END_TIME, mEndTime);
+        values.put(ScheduleEntry.COLUMN_SCHEDULE_RETURNS, Arrays.toString(mReturns));
 
         long newRowId = db.insert(ScheduleEntry.TABLE_NAME, null, values);
 
@@ -149,8 +162,42 @@ public class ScheduleEditor extends AppCompatActivity {
             Toast.makeText(this, "Problem adding new boiler.", Toast.LENGTH_SHORT).show();
 
         db.close();
-        // TODO: Save schedule to database
+
+        /*ScheduleTask scheduleTask = new ScheduleTask();
+        String param = "";
+
+        String[] params = {};*/
+
+        // TODO: Update server with new Schedule
         // TODO: add option to EDIT existing schedule
+    }
+
+    /**
+     * Gets hour out of minutes in day(24h) format
+     * @param time
+     * @return
+     */
+    private String minutesInDayToHours(int time) {
+        String hours = String.valueOf(time/60);
+
+        if (hours.length() == 1)
+            hours = "0" + hours;
+
+        return hours;
+    }
+
+    /**
+     * Gets minutes out of minutes in day(24h) format
+     * @param time
+     * @return
+     */
+    private String minutesInDayToMinutes(int time) {
+        String minutes = String.valueOf(time%60);
+
+        if (minutes.length() == 1)
+            minutes = "0" + minutes;
+
+        return minutes;
     }
 
 }

@@ -29,17 +29,11 @@ class ChangeStatusTask extends AsyncTask<String, Void, Boolean> {
             Log.i(LOG_TAG, "response: " + response);
 
             return response;
-
-            /*if (!response) {
-                return false;
-                Log.e(LOG_TAG, "Bad response.");
-            }*/
         } catch (IOException e) {
             Log.e(LOG_TAG, "ERROR CONNECTING TO SERVER");
             e.printStackTrace();
             return false;
         }
-        //return null;
     }
 
     @Override

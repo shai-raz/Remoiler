@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import hu.pe.remoiler.remoiler.data.ScheduleContract.ScheduleEntry;
@@ -25,6 +26,8 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
     //ScheduleAdapter scheduleAdapter;
 
     private int boilerID;
+    ListView mListView;
+    ScheduleAdapter scheduleAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,6 +50,29 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
         });
 
         populateList();
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), ScheduleEditor.class);
+
+                long scheduleID = mListView.getAdapter().getItemId(position);
+                Log.i(LOG_TAG, "schedule ID:" + String.valueOf(scheduleID));
+                intent.putExtra("scheduleID", scheduleID);
+
+                Cursor cursor = (Cursor) mListView.getAdapter().getItem(position);
+                int startTime = cursor.getInt(cursor.getColumnIndex(ScheduleEntry.COLUMN_SCHEDULE_START_TIME));
+                int endTime = cursor.getInt(cursor.getColumnIndex(ScheduleEntry.COLUMN_SCHEDULE_END_TIME));
+                String returns = cursor.getString(cursor.getColumnIndex(ScheduleEntry.COLUMN_SCHEDULE_RETURNS));
+
+                intent.putExtra("startTime", startTime);
+                intent.putExtra("endTime", endTime);
+                intent.putExtra("returns", returns);
+
+                startActivity(intent);
+
+            }
+        });
 
         return rootView;
     }
@@ -88,9 +114,9 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
                 null);
 
 
-        ListView listView = (ListView) rootView.findViewById(R.id.schedule_list_view);
-        ScheduleAdapter scheduleAdapter = new ScheduleAdapter(getActivity(), cursor);
-        listView.setAdapter(scheduleAdapter);
+        mListView = (ListView) rootView.findViewById(R.id.schedule_list_view);
+        scheduleAdapter = new ScheduleAdapter(getActivity(), cursor);
+        mListView.setAdapter(scheduleAdapter);
         Log.i(LOG_TAG, "Adapter has been set.");
 
         //cursor.close();

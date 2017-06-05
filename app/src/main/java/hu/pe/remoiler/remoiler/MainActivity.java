@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         loaderManager.initLoader(1, null, this);
 
         populateList();
+        listView.setEmptyView(findViewById(R.id.main_empty_view));
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
             @Override

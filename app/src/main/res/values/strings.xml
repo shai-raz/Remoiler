@@ -5,6 +5,10 @@
     <string name="activity_boiler_editor_label">Boiler Editor</string>
     <string name="activity_wifi_setup_label">Wi-Fi Setup</string>
 
+
+    <!-- Main Activity -->
+    <string name="main_empty_view_text">No Remoilers have been set yet!\nClick on the Plus and add one!</string>
+
     <!-- Tab Titles -->
     <string name="fragment_switch">On/Off</string>
     <string name="fragment_schedule">Schedule</string>

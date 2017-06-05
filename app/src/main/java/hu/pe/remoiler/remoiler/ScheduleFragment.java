@@ -57,8 +57,10 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
                 Intent intent = new Intent(getActivity(), ScheduleEditor.class);
 
                 long scheduleID = mListView.getAdapter().getItemId(position);
+                Cursor adapterCursor = (Cursor) mListView.getAdapter().getItem(position);
                 Log.i(LOG_TAG, "schedule ID:" + String.valueOf(scheduleID));
                 intent.putExtra("scheduleID", scheduleID);
+                intent.putExtra("boilerID", adapterCursor.getInt(adapterCursor.getColumnIndex(ScheduleEntry.COLUMN_SCHEDULE_BOILER_ID)));
 
                 Cursor cursor = (Cursor) mListView.getAdapter().getItem(position);
                 int startTime = cursor.getInt(cursor.getColumnIndex(ScheduleEntry.COLUMN_SCHEDULE_START_TIME));

@@ -266,6 +266,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         boilerAdapter = new BoilerAdapter(this, cursor);
         listView.setAdapter(boilerAdapter);
 
+        //db.close();
+
 
         // Register the ListView for the Context Menu (shows when item is selected)
 

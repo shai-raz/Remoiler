@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.NumberPicker;
@@ -18,6 +19,8 @@ import hu.pe.remoiler.remoiler.data.ScheduleContract.ScheduleEntry;
 
 public class ScheduleEditor extends AppCompatActivity {
 
+    final private static String LOG_TAG = ScheduleEntry.class.getSimpleName();
+
     NumberPicker startTimeHourPicker;
     NumberPicker startTimeMinutePicker;
     NumberPicker endTimeHourPicker;
@@ -28,6 +31,7 @@ public class ScheduleEditor extends AppCompatActivity {
     private int mStartTime;
     private int mEndTime;
     private int[] mReturns;
+    private long mScheduleID;
     private boolean mEditMode = false;
 
     @Override
@@ -35,7 +39,8 @@ public class ScheduleEditor extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.schedule_editor);
 
-        mBoilerID = getIntent().getIntExtra("mBoilerID", 0);
+        mBoilerID = getIntent().getIntExtra("boilerID", 0);
+        Toast.makeText(this, String.valueOf(mBoilerID), Toast.LENGTH_SHORT).show();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -89,17 +94,40 @@ public class ScheduleEditor extends AppCompatActivity {
         toggleDay[5] = (ToggleButton) findViewById(R.id.toggleFriday);
         toggleDay[6] = (ToggleButton) findViewById(R.id.toggleSaturday);
 
-        long scheduleID = getIntent().getLongExtra("scheduleID", -1);
+        mScheduleID = getIntent().getLongExtra("scheduleID", -1);
 
-        if (scheduleID != -1) {
+        // Check whether it's a new schedule or not
+        if (mScheduleID != -1) {
             mEditMode = true;
             mStartTime = getIntent().getIntExtra("startTime", 0);
             mEndTime = getIntent().getIntExtra("endTime", 0);
             String stringReturns = getIntent().getStringExtra("returns");
 
-            startTimeHourPicker.setValue(Integer.parseInt(minutesInDayToHours(mStartTime)));
+            // Create an array of days
+            stringReturns = stringReturns.replace("[","");
+            stringReturns = stringReturns.replace("]","");
+            stringReturns = stringReturns.replaceAll("\\s+","");
+            String[] returnsArray = stringReturns.split(",");
 
-            Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+            // Convert array to int array
+            int[] returns = new int[7];
+
+            for (int i = 0; i < 7; i++) {
+                returns[i] = Integer.parseInt(returnsArray[i]);
+            }
+
+            //Log.i(LOG_TAG, "returnsInt: " + Arrays.toString(returns));
+
+            startTimeHourPicker.setValue(Integer.parseInt(minutesInDayToHours(mStartTime)));
+            startTimeMinutePicker.setValue(Integer.parseInt(minutesInDayToMinutes(mStartTime)));
+            endTimeHourPicker.setValue(Integer.parseInt(minutesInDayToHours(mEndTime)));
+            endTimeMinutePicker.setValue(Integer.parseInt(minutesInDayToMinutes(mEndTime)));
+
+            for (int i = 0; i < 7; i++) {
+                if (returns[i] == 1)
+                    toggleDay[i].setChecked(true);
+            }
+
         }
 
         // TODO: visual polish
@@ -118,7 +146,7 @@ public class ScheduleEditor extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_save:
                 saveSchedule();
-                Toast.makeText(this, "Save clicked", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Save clicked", Toast.LENGTH_SHORT).show();
                 this.finish();
                 return true;
             case android.R.id.home:
@@ -154,7 +182,14 @@ public class ScheduleEditor extends AppCompatActivity {
         values.put(ScheduleEntry.COLUMN_SCHEDULE_END_TIME, mEndTime);
         values.put(ScheduleEntry.COLUMN_SCHEDULE_RETURNS, Arrays.toString(mReturns));
 
-        long newRowId = db.insert(ScheduleEntry.TABLE_NAME, null, values);
+        long newRowId;
+
+        if (!mEditMode) // New schedule
+            newRowId = db.insert(ScheduleEntry.TABLE_NAME, null, values);
+        else { // Editing
+            String[] whereArgs = { String.valueOf(mScheduleID) };
+            newRowId = db.update(ScheduleEntry.TABLE_NAME, values, ScheduleEntry._ID + "=?", whereArgs);
+        }
 
         if (newRowId != -1)
             Toast.makeText(this, "Added new Boiler! ID: " + newRowId, Toast.LENGTH_SHORT).show();

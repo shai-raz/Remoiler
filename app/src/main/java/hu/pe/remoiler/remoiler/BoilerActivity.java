@@ -42,7 +42,7 @@ public class BoilerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_boiler);
 
         if (getIntent().getExtras() != null) {
-            boilerID = getIntent().getIntExtra("id", 0);
+            boilerID = getIntent().getIntExtra("boilerID", 0);
         }
 
 

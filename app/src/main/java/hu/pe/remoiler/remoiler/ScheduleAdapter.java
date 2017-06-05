@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +20,11 @@ import hu.pe.remoiler.remoiler.data.ScheduleContract.ScheduleEntry;
 
 public class ScheduleAdapter extends CursorAdapter {
 
+    final private static String LOG_TAG = ScheduleAdapter.class.getSimpleName();
+
     Context mContext;
 
-    public ScheduleAdapter(Context context, Cursor c) {
+    ScheduleAdapter(Context context, Cursor c) {
         super(context, c, 0);
         mContext = context;
     }
@@ -35,6 +38,7 @@ public class ScheduleAdapter extends CursorAdapter {
     // Bind all the views into the layout
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
+        Log.i(LOG_TAG, "bindView()");
         // Declare all widgets in the layout
         TextView startTimeTv = (TextView) view.findViewById(R.id.schedule_start_time);
         TextView endTimeTv = (TextView) view.findViewById(R.id.schedule_end_time);
@@ -126,10 +130,8 @@ public class ScheduleAdapter extends CursorAdapter {
         String daysInWeekString = "";
 
         for (int i = 0; i < 7; i++) {
-            switch (daysInWeek[i]) {
-                case 1:
-                    daysInWeekString += intToDayInWeek(i) + " ";
-            }
+            if (daysInWeek[i] == 1)
+                daysInWeekString += intToDayInWeek(i) + " ";
         }
 
         return daysInWeekString;
@@ -138,19 +140,19 @@ public class ScheduleAdapter extends CursorAdapter {
     // TODO: check if dynamic string works
     private String intToDayInWeek (int day) {
         switch (day) {
-            case 1:
+            case 0:
                 return mContext.getString(R.string.schedule_sunday);
-            case 2:
+            case 1:
                 return mContext.getString(R.string.schedule_monday);
-            case 3:
+            case 2:
                 return mContext.getString(R.string.schedule_tuesday);
-            case 4:
+            case 3:
                 return mContext.getString(R.string.schedule_wednesday);
-            case 5:
+            case 4:
                 return mContext.getString(R.string.schedule_thursday);
-            case 6:
+            case 5:
                 return mContext.getString(R.string.schedule_friday);
-            case 7:
+            case 6:
                 return mContext.getString(R.string.schedule_saturday);
         }
         return "";

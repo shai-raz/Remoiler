@@ -68,7 +68,8 @@ final class ServerQueries {
                 uriBuilder.appendPath("change_status");
                 break;
             case PATH_SCHEDULE:
-                uriBuilder.appendPath("schedule");
+                uriBuilder.appendPath("luz");
+                uriBuilder.appendPath("create");
         }
 
         try {

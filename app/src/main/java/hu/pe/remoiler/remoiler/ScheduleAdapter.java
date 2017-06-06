@@ -78,7 +78,7 @@ public class ScheduleAdapter extends CursorAdapter {
 
         view.setFocusable(false);
 
-        /*activeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        activeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 RemoilerDbHelper dbHelper = new RemoilerDbHelper(context);
@@ -99,9 +99,9 @@ public class ScheduleAdapter extends CursorAdapter {
                 /*
                 // TODO: update active with server
                 Consider moving this db query to ScheduleFragment and then call it from here.
-                *//*
+                */
             }
-        });*/
+        });
     }
 
     /**

@@ -103,6 +103,7 @@ final class NetworkUtils {
             for (String param : params) {
                 urlParameters += param + "&";
             }
+            Log.i(LOG_TAG, "urlParameters: " + urlParameters);
             dStream.writeBytes(urlParameters);
             dStream.flush();
             dStream.close();

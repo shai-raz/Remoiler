@@ -10,7 +10,7 @@ import java.net.URL;
  * Used to update server with new/updated schedule.
  */
 
-class ScheduleTask extends AsyncTask<String, Void, Boolean> {
+/*class ScheduleTask extends AsyncTask<String, Void, Boolean> {
 
     private final static String LOG_TAG = ScheduleTask.class.getSimpleName();
 
@@ -29,4 +29,4 @@ class ScheduleTask extends AsyncTask<String, Void, Boolean> {
             return false;
         }
     }
-}
+}*/

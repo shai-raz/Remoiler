@@ -1,7 +1,9 @@
 package hu.pe.remoiler.remoiler;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,9 +13,13 @@ import android.widget.NumberPicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
 import hu.pe.remoiler.remoiler.data.ScheduleContract.ScheduleEntry;
 
@@ -147,7 +153,6 @@ public class ScheduleEditor extends AppCompatActivity {
             case R.id.action_save:
                 saveSchedule();
                 //Toast.makeText(this, "Save clicked", Toast.LENGTH_SHORT).show();
-                this.finish();
                 return true;
             case android.R.id.home:
                 this.finish();
@@ -198,19 +203,71 @@ public class ScheduleEditor extends AppCompatActivity {
 
         db.close();
 
-        /*ScheduleTask scheduleTask = new ScheduleTask();
-        String param = "";
 
-        String[] params = {};*/
+        ArrayList<String> paramsList = new ArrayList<>();
+        paramsList.add("remoiler_id=" + mBoilerID);
+        if (!mEditMode)
+            paramsList.add("luz_id=" + newRowId);
+        else
+            paramsList.add("luz_id=" + mScheduleID);
+        paramsList.add("start_time=" + mStartTime);
+        paramsList.add("end_time=" + mEndTime);
+        paramsList.add("returns=" + Arrays.toString(mReturns));
+
+
+        class ScheduleTask extends AsyncTask<String, Void, Boolean> {
+
+            private final String LOG_TAG = ScheduleTask.class.getSimpleName();
+
+            @Override
+            protected Boolean doInBackground(String... params) {
+                URL queryUrl = ServerQueries.createURL(ServerQueries.PATH_SCHEDULE);
+                Log.i(LOG_TAG, "params: " + params.toString());
+
+                try {
+                    boolean response = NetworkUtils.executeURL(queryUrl, params);
+
+                    Log.i(LOG_TAG, "response: " + response);
+                    return response;
+
+                } catch (IOException e) {
+                    Log.e(LOG_TAG, "ERROR CONNECTING TO SERVER");
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(Boolean response) {
+                if (!response) {
+                    SweetAlertDialog errorDialog = new SweetAlertDialog(ScheduleEditor.this, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("Something went wrong..")
+                            .setContentText("Couldn't reach the remoiler, try again later.");
+                    errorDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
+                                    ScheduleEditor.this.finish();
+                                }
+                            });
+                    errorDialog.show();
+                } else {
+                    ScheduleEditor.this.finish();
+                }
+            }
+        }
+
+        ScheduleTask scheduleTask = new ScheduleTask();
+        String[] params = new String[paramsList.size()];
+        params = paramsList.toArray(params);
+        scheduleTask.execute(params);
 
         // TODO: Update server with new Schedule
-        // TODO: add option to EDIT existing schedule
     }
 
     /**
      * Gets hour out of minutes in day(24h) format
-     * @param time
-     * @return
+     * @param time Minutes in day
+     * @return hours in hh format
      */
     private String minutesInDayToHours(int time) {
         String hours = String.valueOf(time/60);
@@ -223,8 +280,8 @@ public class ScheduleEditor extends AppCompatActivity {
 
     /**
      * Gets minutes out of minutes in day(24h) format
-     * @param time
-     * @return
+     * @param time Minutes in day
+     * @return minutes in mm format
      */
     private String minutesInDayToMinutes(int time) {
         String minutes = String.valueOf(time%60);

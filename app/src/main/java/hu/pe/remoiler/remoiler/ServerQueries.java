@@ -19,6 +19,7 @@ final class ServerQueries {
     public final static int PATH_GET_STATUS = 601;
     public final static int PATH_CHANGE_STATUS = 602;
     public final static int PATH_SCHEDULE = 603;
+    public final static int PATH_GET_SCHEDULES = 604;
 
     // Uncallable constructor
     private ServerQueries() {}
@@ -70,6 +71,10 @@ final class ServerQueries {
             case PATH_SCHEDULE:
                 uriBuilder.appendPath("luz");
                 uriBuilder.appendPath("create");
+                break;
+            case PATH_GET_SCHEDULES:
+                uriBuilder.appendPath("remoiler");
+                uriBuilder.appendPath("luzes");
         }
 
         try {

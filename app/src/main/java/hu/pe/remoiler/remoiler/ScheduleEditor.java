@@ -2,6 +2,7 @@ package hu.pe.remoiler.remoiler;
 
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import hu.pe.remoiler.remoiler.data.BoilerContract.BoilerEntry;
 import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
 import hu.pe.remoiler.remoiler.data.ScheduleContract.ScheduleEntry;
 
@@ -203,9 +205,24 @@ public class ScheduleEditor extends AppCompatActivity {
 
         db.close();
 
+        // Get the boiler key
+        db = dbHelper.getReadableDatabase();
+        String[] columns = {BoilerEntry.COLUMN_BOILER_KEY};
+        String[] selectionArgs = {ScheduleEntry.COLUMN_SCHEDULE_BOILER_ID};
+        Cursor cursor = db.query(BoilerEntry.TABLE_NAME,
+                columns,
+                BoilerEntry._ID + "+?",
+                selectionArgs,
+                null,
+                null,
+                null);
+
+        cursor.moveToFirst();
+        String boilerKey = cursor.getString(cursor.getColumnIndex(BoilerEntry.COLUMN_BOILER_KEY));
+
 
         ArrayList<String> paramsList = new ArrayList<>();
-        paramsList.add("remoiler_id=" + mBoilerID);
+        paramsList.add("key=" + boilerKey);
         if (!mEditMode)
             paramsList.add("luz_id=" + newRowId);
         else

@@ -1,10 +1,13 @@
 package hu.pe.remoiler.remoiler;
 
 import android.app.LoaderManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -15,6 +18,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.io.IOException;
+import java.net.URL;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import hu.pe.remoiler.remoiler.data.BoilerContract.BoilerEntry;
 import hu.pe.remoiler.remoiler.data.ScheduleContract.ScheduleEntry;
 import hu.pe.remoiler.remoiler.data.RemoilerDbHelper;
 
@@ -25,7 +33,7 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
     View rootView;
     //ScheduleAdapter scheduleAdapter;
 
-    private int boilerID;
+    private int mBoilerID;
     ListView mListView;
     ScheduleAdapter scheduleAdapter;
 
@@ -33,7 +41,7 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        boilerID = getActivity().getIntent().getIntExtra("boilerID", 0);
+        mBoilerID = getActivity().getIntent().getIntExtra("bBoilerID", 0);
 
         // Root view that will be edited & returned at the end
         rootView = inflater.inflate(R.layout.fragment_schedule, container, false);
@@ -44,11 +52,15 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ScheduleEditor.class);
-                intent.putExtra("boilerID", boilerID);
+                intent.putExtra("mBoilerID", mBoilerID);
                 startActivity(intent);
             }
         });
 
+        // Get schedules from server
+        getSchedulesFromServer();
+
+        // Fill ListView with the schedules
         populateList();
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -60,7 +72,7 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
                 Cursor adapterCursor = (Cursor) mListView.getAdapter().getItem(position);
                 Log.i(LOG_TAG, "schedule ID:" + String.valueOf(scheduleID));
                 intent.putExtra("scheduleID", scheduleID);
-                intent.putExtra("boilerID", adapterCursor.getInt(adapterCursor.getColumnIndex(ScheduleEntry.COLUMN_SCHEDULE_BOILER_ID)));
+                intent.putExtra("mBoilerID", adapterCursor.getInt(adapterCursor.getColumnIndex(ScheduleEntry.COLUMN_SCHEDULE_BOILER_ID)));
 
                 Cursor cursor = (Cursor) mListView.getAdapter().getItem(position);
                 int startTime = cursor.getInt(cursor.getColumnIndex(ScheduleEntry.COLUMN_SCHEDULE_START_TIME));
@@ -84,15 +96,74 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
         super.onStart();
     }
 
+    private void getSchedulesFromServer() {
+        RemoilerDbHelper dbHelper = new RemoilerDbHelper(getActivity());
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        // Getting the boiler's key
+        Cursor boilerCursor = db.query(
+                BoilerEntry.TABLE_NAME,
+                new String[] { BoilerEntry.COLUMN_BOILER_KEY },
+                BoilerEntry._ID + "=?",
+                new String[] { String.valueOf(mBoilerID) },
+                null, null, null);
+
+        String boilerKey = boilerCursor.getString(boilerCursor.getColumnIndex(BoilerEntry.COLUMN_BOILER_KEY));
+        boilerCursor.close();
+        db.close();
+
+        class GetSchedulesFromServerTask extends AsyncTask<String, Void, String> {
+
+            @Override
+            protected String doInBackground(String... params) {
+                URL queryUrl = ServerQueries.createURL(ServerQueries.PATH_SCHEDULE);
+                Log.i(LOG_TAG, "params: " + params.toString());
+
+                try {
+                    String response  = NetworkUtils.getStringFromURL(queryUrl, params[0]);
+                    Log.i(LOG_TAG, "json schedule response: " + response);
+                    return response;
+
+                } catch (IOException e) {
+                    Log.e(LOG_TAG, "ERROR CONNECTING TO SERVER");
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean response) {
+                if (!response) {
+                    SweetAlertDialog errorDialog = new SweetAlertDialog(ScheduleEditor.this, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("Something went wrong..")
+                            .setContentText("Couldn't reach the remoiler, try again later.");
+                    errorDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            //ScheduleEditor.this.finish();
+                        }
+                    });
+                    errorDialog.show();
+                } else {
+                    //ScheduleEditor.this.finish();
+                }
+            }
+        }
+
+        GetSchedulesFromServerTask scheduleServerTask = new GetSchedulesFromServerTask();
+        scheduleServerTask.execute(boilerKey);
+    }
+
     private void populateList() {
         // To access our database, we instantiate our subclass of SQLiteOpenHelper
         // and pass the context, which is the current activity.
         RemoilerDbHelper mDbHelper = new RemoilerDbHelper(getActivity());
-        Log.i(LOG_TAG, "mDbHelper created");
+        //Log.i(LOG_TAG, "mDbHelper created");
 
         // Create and/or open a database to read from it
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        Log.i(LOG_TAG, "SqLiteDatabase created");
+        //Log.i(LOG_TAG, "SqLiteDatabase created");
 
         // Columns to select
         String[] projection = {
@@ -104,20 +175,19 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
                 ScheduleEntry.COLUMN_SCHEDULE_ACTIVE
         };
 
-
-        Cursor cursor = db.query(
+        // Getting the schedules for the adapter
+        Cursor scheduleCursor = db.query(
                 ScheduleEntry.TABLE_NAME,
                 projection,
                 ScheduleEntry.COLUMN_SCHEDULE_BOILER_ID + "=?",
-                new String[] { String.valueOf(boilerID) },
+                new String[] { String.valueOf(mBoilerID) },
                 null,
                 null,
                 null,
                 null);
 
-
         mListView = (ListView) rootView.findViewById(R.id.schedule_list_view);
-        scheduleAdapter = new ScheduleAdapter(getActivity(), cursor);
+        scheduleAdapter = new ScheduleAdapter(getActivity(), scheduleCursor);
         mListView.setAdapter(scheduleAdapter);
         Log.i(LOG_TAG, "Adapter has been set.");
 

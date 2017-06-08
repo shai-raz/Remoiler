@@ -30,6 +30,8 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
 
     private static final String LOG_TAG = ScheduleFragment.class.getSimpleName();
 
+    Boolean _isSeen = false; // Is the fragment been seen by the user yet?
+
     View rootView;
     //ScheduleAdapter scheduleAdapter;
 
@@ -58,7 +60,7 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
         });
 
         // Get schedules from server
-        getSchedulesFromServer();
+        //getSchedulesFromServer();
 
         // Fill ListView with the schedules
         populateList();
@@ -92,6 +94,18 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser && !_isSeen ) {
+            _isSeen = true;
+            getSchedulesFromServer();
+            // Code executes ONLY THE FIRST TIME fragment is viewed.
+        }
+
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
     }
@@ -108,19 +122,33 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
                 new String[] { String.valueOf(mBoilerID) },
                 null, null, null);
 
-        String boilerKey = boilerCursor.getString(boilerCursor.getColumnIndex(BoilerEntry.COLUMN_BOILER_KEY));
-        boilerCursor.close();
+        String boilerKey = null;
+        if (boilerCursor != null && boilerCursor.moveToFirst()) {
+            //boilerCursor.moveToFirst();
+            boilerKey = boilerCursor.getString(boilerCursor.getColumnIndex(BoilerEntry.COLUMN_BOILER_KEY));
+            boilerCursor.close();
+        }
         db.close();
 
         class GetSchedulesFromServerTask extends AsyncTask<String, Void, String> {
 
+            private SweetAlertDialog loadingSchedulesDialog;
+
+            @Override
+            protected void onPreExecute() {
+                loadingSchedulesDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE)
+                        .setTitleText(getString(R.string.schedule_loading_from_server));
+                loadingSchedulesDialog.setCancelable(false);
+                loadingSchedulesDialog.show();
+            }
+
             @Override
             protected String doInBackground(String... params) {
-                URL queryUrl = ServerQueries.createURL(ServerQueries.PATH_SCHEDULE);
-                Log.i(LOG_TAG, "params: " + params.toString());
+                URL queryUrl = ServerQueries.createURL(ServerQueries.PATH_GET_SCHEDULES);
+                Log.i(LOG_TAG, "params: " + params);
 
                 try {
-                    String response  = NetworkUtils.getStringFromURL(queryUrl, params[0]);
+                    String response  = NetworkUtils.getStringFromURL2(queryUrl, params[0]);
                     Log.i(LOG_TAG, "json schedule response: " + response);
                     return response;
 
@@ -133,21 +161,23 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
             }
 
             @Override
-            protected void onPostExecute(Boolean response) {
-                if (!response) {
-                    SweetAlertDialog errorDialog = new SweetAlertDialog(ScheduleEditor.this, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Something went wrong..")
-                            .setContentText("Couldn't reach the remoiler, try again later.");
-                    errorDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            protected void onPostExecute(String response) {
+                loadingSchedulesDialog.dismiss();
+                if (response == null) {
+                    SweetAlertDialog errorDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText(getString(R.string.schedule_error_something_went_wrong))
+                            .setContentText(getString(R.string.schedule_error_couldnt_reach_server));
+                    /*errorDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
                             //ScheduleEditor.this.finish();
                         }
-                    });
+                    });*/
                     errorDialog.show();
-                } else {
+
+                } /*else {
                     //ScheduleEditor.this.finish();
-                }
+                }*/
             }
         }
 

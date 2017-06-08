@@ -43,6 +43,9 @@
     <string name="schedule_thursday">Th</string>
     <string name="schedule_friday">F</string>
     <string name="schedule_saturday">Sa</string>
+    <string name="schedule_error_something_went_wrong">Something went wrong..</string>
+    <string name="schedule_error_couldnt_reach_server">Couldn\'t reach the server, try again later.</string>
+    <string name="schedule_loading_from_server">Loading from server..</string>
 
     <!-- Schedule Editor -->
     <string name="schedule_editor_start_time">Start Time:</string>

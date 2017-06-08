@@ -43,4 +43,7 @@
     <string name="boiler_error_remoiler_is_offline">הרימויילר כבוי.</string>
     <string name="activity_wifi_setup_label">הגדרת Wi-Fi</string>
     <string name="main_empty_view_text">אין בויילרים מוגדרים!\\r\\nלחץ על הפלוס והוסף אחד!</string>
+    <string name="schedule_error_couldnt_reach_server">לא הייתה אפשרות לגשת לשרת, אנא נסה שוב.</string>
+    <string name="schedule_error_something_went_wrong">משהו השתבש..</string>
+    <string name="schedule_loading_from_server">טוען מהשרת..</string>
 </resources>

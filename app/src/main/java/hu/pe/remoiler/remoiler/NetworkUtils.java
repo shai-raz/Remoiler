@@ -249,6 +249,7 @@ final class NetworkUtils {
                 Log.i(LOG_TAG, "string response: " + stringResponse);
             } else {
                 Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
+                return null;
             }
 
         } catch (IOException e) {

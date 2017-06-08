@@ -258,8 +258,8 @@ public class ScheduleEditor extends AppCompatActivity {
             protected void onPostExecute(Boolean response) {
                 if (!response) {
                     SweetAlertDialog errorDialog = new SweetAlertDialog(ScheduleEditor.this, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Something went wrong..")
-                            .setContentText("Couldn't reach the remoiler, try again later.");
+                            .setTitleText(getString(R.string.schedule_error_something_went_wrong))
+                            .setContentText(getString(R.string.schedule_error_couldnt_reach_server));
                     errorDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                                 @Override
                                 public void onDismiss(DialogInterface dialog) {
@@ -278,7 +278,9 @@ public class ScheduleEditor extends AppCompatActivity {
         params = paramsList.toArray(params);
         scheduleTask.execute(params);
 
-        // TODO: Update server with new Schedule
+        // TODO: change concept of Schedule IDs so it will worked sync with server ( Maybe work with serials )
+        // TODO: Only add schedule if it is sent to the server aswell
+
     }
 
     /**

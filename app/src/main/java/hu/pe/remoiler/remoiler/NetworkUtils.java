@@ -133,7 +133,7 @@ final class NetworkUtils {
     }
 
     // Returns String from given URL
-    public static String getStringFromURL(URL queryUrl, String key) throws IOException {
+    static String getStringFromURL(URL queryUrl, String key) throws IOException {
         HttpsURLConnection urlConnection = null;
         InputStream inputStream = null;
         String stringResponse = "";
@@ -200,7 +200,7 @@ final class NetworkUtils {
         return stringResponse;
     }
 // TODO: fix GET/POST
-    public static String getStringFromURL2(URL queryUrl, String key) throws IOException {
+    static String getStringFromURL2(URL queryUrl, String key) throws IOException {
         HttpsURLConnection urlConnection = null;
         InputStream inputStream = null;
         String stringResponse = "";
@@ -268,6 +268,77 @@ final class NetworkUtils {
         return stringResponse;
     }
 
+    static String getStringFromURL3(URL queryUrl, String... params) throws IOException {
+        HttpsURLConnection urlConnection = null;
+        InputStream inputStream = null;
+        String stringResponse = "";
+
+        SSLContext sslcontext = null;
+        try {
+            sslcontext = SSLContext.getInstance("TLSv1");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            sslcontext.init(null, null, null);
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }
+        SSLSocketFactory NoSSLv3Factory = new NoSSLv3SocketFactory(sslcontext.getSocketFactory());
+
+        HttpsURLConnection.setDefaultSSLSocketFactory(NoSSLv3Factory);
+
+
+        try {
+            // Making the connection with the URL, using "GET" request method
+            urlConnection = (HttpsURLConnection) queryUrl.openConnection();
+            urlConnection.setReadTimeout(9000);
+            urlConnection.setConnectTimeout(3000);
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
+
+            DataOutputStream dStream = new DataOutputStream(urlConnection.getOutputStream());
+            String urlParameters = "";
+            for (String param : params) {
+                urlParameters += param + "&";
+            }
+            //urlParameters.substring(0,urlParameters.length()-1)
+            Log.i(LOG_TAG, "urlParameters: " + urlParameters);
+            dStream.writeBytes(urlParameters);
+            dStream.flush();
+            dStream.close();
+
+            urlConnection.connect();
+
+            //Log.i(LOG_TAG, "response code: " + String.valueOf(urlConnection.getResponseCode()));
+
+            // Checking if the response code is OK
+            if (urlConnection.getResponseCode() == 200) {
+                inputStream = urlConnection.getInputStream();
+                stringResponse = readFromStream(inputStream);
+                Log.i(LOG_TAG, "string response: " + stringResponse);
+            } else {
+                Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
+                return null;
+            }
+
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Problem retrieving the data from server.", e);
+            return null;
+        }
+        finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        }
+
+        return stringResponse;
+    }
 
     // Reading the String from the "Stream"
     private static String readFromStream(InputStream inputStream) throws IOException {
@@ -284,5 +355,7 @@ final class NetworkUtils {
 
         return output.toString();
     }
+
+
 
 }

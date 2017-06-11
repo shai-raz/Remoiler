@@ -168,6 +168,130 @@ public class ScheduleEditor extends AppCompatActivity {
      * Saves the created schedule into the database
      */
     private void saveSchedule() {
+        /*RemoilerDbHelper dbHelper = new RemoilerDbHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        // 'Convert' the times into minutes in day.
+        mStartTime = (startTimeHourPicker.getValue() * 60) + startTimeMinutePicker.getValue();
+        mEndTime = (endTimeHourPicker.getValue() * 60) + endTimeMinutePicker.getValue();
+
+        mReturns = new int[7];
+
+        // Create an int array of selected days in week (which will be inserted into the db as a String)
+        for (int i = 0; i < 7; i++) {
+            mReturns[i] = toggleDay[i].isChecked() ? 1 : 0;
+        }
+
+        values.put(ScheduleEntry.COLUMN_SCHEDULE_BOILER_ID, mBoilerID);
+        values.put(ScheduleEntry.COLUMN_SCHEDULE_START_TIME, mStartTime);
+        values.put(ScheduleEntry.COLUMN_SCHEDULE_END_TIME, mEndTime);
+        values.put(ScheduleEntry.COLUMN_SCHEDULE_RETURNS, Arrays.toString(mReturns));
+
+        long newRowId;
+
+        if (!mEditMode) // New schedule
+            newRowId = db.insert(ScheduleEntry.TABLE_NAME, null, values);
+        else { // Editing
+            String[] whereArgs = { String.valueOf(mScheduleID) };
+            newRowId = db.update(ScheduleEntry.TABLE_NAME, values, ScheduleEntry._ID + "=?", whereArgs);
+        }
+
+        if (newRowId != -1)
+            Toast.makeText(this, "Added new Boiler! ID: " + newRowId, Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(this, "Problem adding new boiler.", Toast.LENGTH_SHORT).show();
+
+        db.close();*/
+
+        // Get the boiler key
+        RemoilerDbHelper dbHelper = new RemoilerDbHelper(this);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String[] columns = {BoilerEntry.COLUMN_BOILER_KEY};
+        String[] selectionArgs = {ScheduleEntry.COLUMN_SCHEDULE_BOILER_ID};
+        Cursor cursor = db.query(BoilerEntry.TABLE_NAME,
+                columns,
+                BoilerEntry._ID + "+?",
+                selectionArgs,
+                null,
+                null,
+                null);
+
+        String boilerKey = "";
+        if (cursor != null && cursor.moveToFirst()) {
+            boilerKey = cursor.getString(cursor.getColumnIndex(BoilerEntry.COLUMN_BOILER_KEY));
+        }
+
+        ArrayList<String> paramsList = new ArrayList<>();
+        paramsList.add("key=" + boilerKey);
+        if (mEditMode)
+            paramsList.add("luz_id=" + mScheduleID);
+        paramsList.add("start_time=" + mStartTime);
+        paramsList.add("end_time=" + mEndTime);
+        paramsList.add("returns=" + Arrays.toString(mReturns));
+
+
+        class ScheduleTask extends AsyncTask<String, Void, String> {
+
+            private final String LOG_TAG = ScheduleTask.class.getSimpleName();
+
+            @Override
+            protected String doInBackground(String... params) {
+                URL queryUrl = ServerQueries.createURL(ServerQueries.PATH_SCHEDULE);
+                Log.i(LOG_TAG, "params: " + params.toString());
+
+                try {
+                    String response = NetworkUtils.getStringFromURL3(queryUrl, params);
+
+                    Log.i(LOG_TAG, "response: " + response);
+                    return response;
+
+                } catch (IOException e) {
+                    Log.e(LOG_TAG, "ERROR CONNECTING TO SERVER");
+                    e.printStackTrace();
+                    return "-1";
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String response) {
+                if (response.equals("-1")) {
+                    SweetAlertDialog errorDialog = new SweetAlertDialog(ScheduleEditor.this, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText(getString(R.string.schedule_error_something_went_wrong))
+                            .setContentText(getString(R.string.schedule_error_couldnt_reach_server));
+                    errorDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
+                                    ScheduleEditor.this.finish();
+                                }
+                            });
+                    errorDialog.show();
+                } else {
+
+                    //ScheduleEditor.this.finish();
+                }
+            }
+        }
+
+        ScheduleTask scheduleTask = new ScheduleTask();
+        String[] params = new String[paramsList.size()];
+        params = paramsList.toArray(params);
+        scheduleTask.execute(params);
+
+        // TODO: change concept of Schedule IDs so it will worked sync with server ( Maybe work with serials )
+        // TODO: Only add schedule if it is sent to the server aswell
+
+    }
+
+
+    /**
+     * Saves new/updating existing schedule into database
+     * @param serial New schedule - Serial that gets returned from the server.
+     *               Existing schedule - Schedule's Serial from DB.
+     */
+    private void saveScheduleToDb(String serial) {
         RemoilerDbHelper dbHelper = new RemoilerDbHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -204,83 +328,6 @@ public class ScheduleEditor extends AppCompatActivity {
             Toast.makeText(this, "Problem adding new boiler.", Toast.LENGTH_SHORT).show();
 
         db.close();
-
-        // Get the boiler key
-        db = dbHelper.getReadableDatabase();
-        String[] columns = {BoilerEntry.COLUMN_BOILER_KEY};
-        String[] selectionArgs = {ScheduleEntry.COLUMN_SCHEDULE_BOILER_ID};
-        Cursor cursor = db.query(BoilerEntry.TABLE_NAME,
-                columns,
-                BoilerEntry._ID + "+?",
-                selectionArgs,
-                null,
-                null,
-                null);
-
-        cursor.moveToFirst();
-        String boilerKey = cursor.getString(cursor.getColumnIndex(BoilerEntry.COLUMN_BOILER_KEY));
-
-
-        ArrayList<String> paramsList = new ArrayList<>();
-        paramsList.add("key=" + boilerKey);
-        if (!mEditMode)
-            paramsList.add("luz_id=" + newRowId);
-        else
-            paramsList.add("luz_id=" + mScheduleID);
-        paramsList.add("start_time=" + mStartTime);
-        paramsList.add("end_time=" + mEndTime);
-        paramsList.add("returns=" + Arrays.toString(mReturns));
-
-
-        class ScheduleTask extends AsyncTask<String, Void, Boolean> {
-
-            private final String LOG_TAG = ScheduleTask.class.getSimpleName();
-
-            @Override
-            protected Boolean doInBackground(String... params) {
-                URL queryUrl = ServerQueries.createURL(ServerQueries.PATH_SCHEDULE);
-                Log.i(LOG_TAG, "params: " + params.toString());
-
-                try {
-                    boolean response = NetworkUtils.executeURL(queryUrl, params);
-
-                    Log.i(LOG_TAG, "response: " + response);
-                    return response;
-
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, "ERROR CONNECTING TO SERVER");
-                    e.printStackTrace();
-                    return false;
-                }
-            }
-
-            @Override
-            protected void onPostExecute(Boolean response) {
-                if (!response) {
-                    SweetAlertDialog errorDialog = new SweetAlertDialog(ScheduleEditor.this, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText(getString(R.string.schedule_error_something_went_wrong))
-                            .setContentText(getString(R.string.schedule_error_couldnt_reach_server));
-                    errorDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                @Override
-                                public void onDismiss(DialogInterface dialog) {
-                                    ScheduleEditor.this.finish();
-                                }
-                            });
-                    errorDialog.show();
-                } else {
-                    ScheduleEditor.this.finish();
-                }
-            }
-        }
-
-        ScheduleTask scheduleTask = new ScheduleTask();
-        String[] params = new String[paramsList.size()];
-        params = paramsList.toArray(params);
-        scheduleTask.execute(params);
-
-        // TODO: change concept of Schedule IDs so it will worked sync with server ( Maybe work with serials )
-        // TODO: Only add schedule if it is sent to the server aswell
-
     }
 
     /**

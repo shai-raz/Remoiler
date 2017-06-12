@@ -16,7 +16,7 @@ public class RemoilerDbHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "remoiler";
 
     private static final String SQL_CREATE_SCHEDULE_ENTRIES = "CREATE TABLE " + ScheduleEntry.TABLE_NAME + "("
-            + ScheduleEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + ScheduleEntry._ID + " INTEGER PRIMARY KEY,"
             + ScheduleEntry.COLUMN_SCHEDULE_BOILER_ID + " INTEGER,"
             + ScheduleEntry.COLUMN_SCHEDULE_START_TIME + " INTEGER DEFAULT 0,"
             + ScheduleEntry.COLUMN_SCHEDULE_END_TIME + " INTEGER DEFAULT 0,"

@@ -281,17 +281,17 @@ public class ScheduleEditor extends AppCompatActivity {
         scheduleTask.execute(params);
 
         // TODO: change concept of Schedule IDs so it will worked sync with server ( Maybe work with serials )
-        // TODO: Only add schedule if it is sent to the server aswell
+        // TODO: Only add schedule if it is sent to the server as well
 
     }
 
 
     /**
      * Saves new/updating existing schedule into database
-     * @param serial New schedule - Serial that gets returned from the server.
-     *               Existing schedule - Schedule's Serial from DB.
+     * @param id New schedule - id that gets returned from the server.
+     *               Existing schedule - Schedule's id from DB.
      */
-    private void saveScheduleToDb(String serial) {
+    private void saveScheduleToDb(long id) {
         RemoilerDbHelper dbHelper = new RemoilerDbHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -308,6 +308,7 @@ public class ScheduleEditor extends AppCompatActivity {
             mReturns[i] = toggleDay[i].isChecked() ? 1 : 0;
         }
 
+        values.put(ScheduleEntry._ID, id);
         values.put(ScheduleEntry.COLUMN_SCHEDULE_BOILER_ID, mBoilerID);
         values.put(ScheduleEntry.COLUMN_SCHEDULE_START_TIME, mStartTime);
         values.put(ScheduleEntry.COLUMN_SCHEDULE_END_TIME, mEndTime);

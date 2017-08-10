@@ -74,8 +74,8 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
                 selectionArgs,
                 null,
                 null,
-                null
-        );
+                null);
+
         Log.i(LOG_TAG, "CURSOR QUERY: " + DatabaseUtils.dumpCursorToString(cursor));
 
         cursor.moveToFirst();

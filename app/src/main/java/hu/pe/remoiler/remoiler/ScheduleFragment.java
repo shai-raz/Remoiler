@@ -5,18 +5,24 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
@@ -43,7 +49,7 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mBoilerID = getActivity().getIntent().getIntExtra("bBoilerID", 0);
+        mBoilerID = getActivity().getIntent().getIntExtra("boilerID", 0);
 
         // Root view that will be edited & returned at the end
         rootView = inflater.inflate(R.layout.fragment_schedule, container, false);
@@ -114,17 +120,24 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
         RemoilerDbHelper dbHelper = new RemoilerDbHelper(getActivity());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
+        String[] projection = { BoilerEntry.COLUMN_BOILER_KEY };
+        String[] selectionArgs = { String.valueOf(mBoilerID) };
+
         // Getting the boiler's key
         Cursor boilerCursor = db.query(
                 BoilerEntry.TABLE_NAME,
-                new String[] { BoilerEntry.COLUMN_BOILER_KEY },
+                projection,
                 BoilerEntry._ID + "=?",
-                new String[] { String.valueOf(mBoilerID) },
-                null, null, null);
+                selectionArgs,
+                null,
+                null,
+                null);
+
+        Log.i(LOG_TAG, "boilerId: " + mBoilerID + ",CURSOR QUERY: " + DatabaseUtils.dumpCursorToString(boilerCursor));
 
         String boilerKey = null;
+        Log.i(LOG_TAG, "boilerCursor: " + boilerCursor);
         if (boilerCursor != null && boilerCursor.moveToFirst()) {
-            //boilerCursor.moveToFirst();
             boilerKey = boilerCursor.getString(boilerCursor.getColumnIndex(BoilerEntry.COLUMN_BOILER_KEY));
             boilerCursor.close();
         }
@@ -144,11 +157,11 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
 
             @Override
             protected String doInBackground(String... params) {
-                URL queryUrl = ServerQueries.createURL(ServerQueries.PATH_GET_SCHEDULES);
+                URL queryUrl = ServerQueries.createURL(ServerQueries.PATH_GET_SCHEDULES, params[0]);
                 Log.i(LOG_TAG, "params: " + params);
 
                 try {
-                    String response  = NetworkUtils.getStringFromURL2(queryUrl, params[0]);
+                    String response  = NetworkUtils.getStringFromURL2(queryUrl);
                     Log.i(LOG_TAG, "json schedule response: " + response);
                     return response;
 
@@ -163,7 +176,7 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
             @Override
             protected void onPostExecute(String response) {
                 loadingSchedulesDialog.dismiss();
-                if (response == null) {
+                if (response == null) { // If there was an error getting schedules from the server (null and not "" - I guess)
                     SweetAlertDialog errorDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText(getString(R.string.schedule_error_something_went_wrong))
                             .setContentText(getString(R.string.schedule_error_couldnt_reach_server));
@@ -175,9 +188,27 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
                     });*/
                     errorDialog.show();
 
-                } /*else {
-                    //ScheduleEditor.this.finish();
-                }*/
+                } else { // Update the db with schedules from server
+                    JSONArray jsonResponse = null;
+                    try {
+                        jsonResponse = new JSONArray(response);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    JSONObject schedule;
+                    for (int i = 0; i < jsonResponse.length(); i++) {
+
+                        try {
+                            schedule = jsonResponse.getJSONObject(i);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    /*RemoilerDbHelper dbHelper = new RemoilerDbHelper(getActivity());
+                    SQLiteDatabase db = dbHelper.getReadableDatabase();*/
+                }
             }
         }
 

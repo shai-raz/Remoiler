@@ -103,8 +103,9 @@ public class ScheduleEditor extends AppCompatActivity {
         toggleDay[6] = (ToggleButton) findViewById(R.id.toggleSaturday);
 
         mScheduleID = getIntent().getLongExtra("scheduleID", -1);
+        Toast.makeText(this, "mScheduleID = " + mScheduleID, Toast.LENGTH_SHORT).show();
 
-        // Check whether it's a new schedule or not
+        // Check whether it's a new schedule or not (-1 = new)
         if (mScheduleID != -1) {
             mEditMode = true;
             mStartTime = getIntent().getIntExtra("startTime", 0);
@@ -124,7 +125,7 @@ public class ScheduleEditor extends AppCompatActivity {
                 returns[i] = Integer.parseInt(returnsArray[i]);
             }
 
-            //Log.i(LOG_TAG, "returnsInt: " + Arrays.toString(returns));
+            //Log.i(LOG_TAG, "returnsInt: " + Arrays.toString(mReturns));
 
             startTimeHourPicker.setValue(Integer.parseInt(minutesInDayToHours(mStartTime)));
             startTimeMinutePicker.setValue(Integer.parseInt(minutesInDayToMinutes(mStartTime)));
@@ -165,7 +166,7 @@ public class ScheduleEditor extends AppCompatActivity {
     }
 
     /**
-     * Saves the created schedule into the database
+     * Saves the created schedule into the server, and then calls @saveScheduleToDb
      */
     private void saveSchedule() {
         /*RemoilerDbHelper dbHelper = new RemoilerDbHelper(this);
@@ -224,6 +225,18 @@ public class ScheduleEditor extends AppCompatActivity {
             boilerKey = cursor.getString(cursor.getColumnIndex(BoilerEntry.COLUMN_BOILER_KEY));
         }
 
+        // Get the Values from the 'form'
+        // 'Convert' the times into minutes in day.
+        mStartTime = (startTimeHourPicker.getValue() * 60) + startTimeMinutePicker.getValue();
+        mEndTime = (endTimeHourPicker.getValue() * 60) + endTimeMinutePicker.getValue();
+
+        mReturns = new int[7];
+
+        // Create an int array of selected days in week (which will be inserted into the db as a String)
+        for (int i = 0; i < 7; i++) {
+            mReturns[i] = toggleDay[i].isChecked() ? 1 : 0;
+        }
+
         ArrayList<String> paramsList = new ArrayList<>();
         paramsList.add("key=" + boilerKey);
         if (mEditMode)
@@ -231,6 +244,7 @@ public class ScheduleEditor extends AppCompatActivity {
         paramsList.add("start_time=" + mStartTime);
         paramsList.add("end_time=" + mEndTime);
         paramsList.add("returns=" + Arrays.toString(mReturns));
+        Log.i(LOG_TAG, "Returns: " + Arrays.toString(mReturns));
 
 
         class ScheduleTask extends AsyncTask<String, Void, String> {
@@ -257,20 +271,22 @@ public class ScheduleEditor extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(String response) {
-                if (response.equals("-1")) {
+                if (response == null || response.equals("-1")) {
                     SweetAlertDialog errorDialog = new SweetAlertDialog(ScheduleEditor.this, SweetAlertDialog.ERROR_TYPE)
                             .setTitleText(getString(R.string.schedule_error_something_went_wrong))
                             .setContentText(getString(R.string.schedule_error_couldnt_reach_server));
-                    errorDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    /*errorDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                                 @Override
                                 public void onDismiss(DialogInterface dialog) {
                                     ScheduleEditor.this.finish();
                                 }
-                            });
+                            });*/
                     errorDialog.show();
-                } else {
-
-                    //ScheduleEditor.this.finish();
+                } else { // If saving schedule to server is successful
+                    Log.i(LOG_TAG, "onPostExecute(), response: " + response);
+                    long longResponse = Long.parseLong(response);
+                    saveScheduleToDb(longResponse); // Save schedule into DB
+                    ScheduleEditor.this.finish(); // Close editor activity
                 }
             }
         }
@@ -297,7 +313,7 @@ public class ScheduleEditor extends AppCompatActivity {
 
         ContentValues values = new ContentValues();
 
-        // 'Convert' the times into minutes in day.
+        /*// 'Convert' the times into minutes in day.
         mStartTime = (startTimeHourPicker.getValue() * 60) + startTimeMinutePicker.getValue();
         mEndTime = (endTimeHourPicker.getValue() * 60) + endTimeMinutePicker.getValue();
 
@@ -306,7 +322,7 @@ public class ScheduleEditor extends AppCompatActivity {
         // Create an int array of selected days in week (which will be inserted into the db as a String)
         for (int i = 0; i < 7; i++) {
             mReturns[i] = toggleDay[i].isChecked() ? 1 : 0;
-        }
+        }*/
 
         values.put(ScheduleEntry._ID, id);
         values.put(ScheduleEntry.COLUMN_SCHEDULE_BOILER_ID, mBoilerID);

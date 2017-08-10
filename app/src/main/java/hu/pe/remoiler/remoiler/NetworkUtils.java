@@ -200,7 +200,7 @@ final class NetworkUtils {
         return stringResponse;
     }
 // TODO: fix GET/POST
-    static String getStringFromURL2(URL queryUrl, String key) throws IOException {
+    static String getStringFromURL2(URL queryUrl) throws IOException {
         HttpsURLConnection urlConnection = null;
         InputStream inputStream = null;
         String stringResponse = "";
@@ -229,14 +229,13 @@ final class NetworkUtils {
             urlConnection.setConnectTimeout(3000);
             urlConnection.setRequestMethod("GET");
             urlConnection.setDoInput(true);
-            urlConnection.setDoOutput(true);
 
-            DataOutputStream dStream = new DataOutputStream(urlConnection.getOutputStream());
+            /*DataOutputStream dStream = new DataOutputStream(urlConnection.getOutputStream());
             String urlParameters = "key=" + key;
             dStream.writeBytes(urlParameters);
             dStream.flush();
 
-            dStream.close();
+            dStream.close();*/
 
             urlConnection.connect();
 

@@ -70,7 +70,7 @@ final class ServerQueries {
                 break;
             case PATH_SCHEDULE:
                 uriBuilder.appendPath("luz");
-                uriBuilder.appendPath("create");
+                uriBuilder.appendPath("insert");
                 break;
             case PATH_GET_SCHEDULES:
                 uriBuilder.appendPath("remoiler");
@@ -88,4 +88,28 @@ final class ServerQueries {
         Log.i(LOG_TAG, "queryUrl: " + queryUrl);
         return queryUrl;
     }
+
+    static URL createURL(int path, String key) {
+        Uri baseUri = Uri.parse(BASE_SERVER_URL);
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+
+        switch (path) {
+            case PATH_GET_SCHEDULES:
+                uriBuilder.appendPath("remoiler");
+                uriBuilder.appendPath("luzes");
+                uriBuilder.appendQueryParameter("key", key);
+        }
+
+        try {
+            queryUrl = new URL(String.valueOf(uriBuilder));
+        } catch (MalformedURLException e) {
+            Log.e(LOG_TAG, "Malformed URL.");
+            e.printStackTrace();
+        }
+
+        if (queryUrl == null) return null;
+        Log.i(LOG_TAG, "queryUrl: " + queryUrl);
+        return queryUrl;
+    }
+
 }

@@ -46,7 +46,7 @@ public class ScheduleAdapter extends CursorAdapter {
         TextView daysInWeekTv = (TextView) view.findViewById(R.id.schedule_days_in_week);
 
         // Extract from Cursor
-        final int scheduleID = cursor.getInt(cursor.getColumnIndex(ScheduleEntry._ID));
+        final long scheduleID = cursor.getLong(cursor.getColumnIndex(ScheduleEntry._ID));
         final int boilerID = cursor.getInt(cursor.getColumnIndex(ScheduleEntry.COLUMN_SCHEDULE_BOILER_ID));
         int startTimeCursor = cursor.getInt(cursor.getColumnIndex(ScheduleEntry.COLUMN_SCHEDULE_START_TIME));
         int endTimeCursor = cursor.getInt(cursor.getColumnIndex(ScheduleEntry.COLUMN_SCHEDULE_END_TIME));

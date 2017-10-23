@@ -284,9 +284,16 @@ public class ScheduleEditor extends AppCompatActivity {
                     errorDialog.show();
                 } else { // If saving schedule to server is successful
                     Log.i(LOG_TAG, "onPostExecute(), response: " + response);
-                    long longResponse = Long.parseLong(response);
-                    saveScheduleToDb(longResponse); // Save schedule into DB
+                    //long longResponse = Long.parseLong(response);
+                    response = response.substring(1);
+                    response = response.substring(0, response.length() - 1);
+                    String[] splitResponse = response.split(","); // Server returns an array in this form: [ID, WAS REMOILER NOTICED(0/1)]
+                    Long idFromServer = Long.parseLong(splitResponse[0]); // The ID the server used in the database
+                    Integer isRemoilerNoticed = Integer.valueOf(splitResponse[1]); // Was remoiler noticed about the new schedule
+                    saveScheduleToDb(idFromServer); // Save schedule into DB
                     ScheduleEditor.this.finish(); // Close editor activity
+
+                    // TODO: let the user know that the Remoiler was either noticed or not (Pop a msg)
                 }
             }
         }

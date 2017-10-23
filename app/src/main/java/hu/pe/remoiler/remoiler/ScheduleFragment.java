@@ -201,13 +201,22 @@ public class ScheduleFragment extends Fragment implements LoaderManager.LoaderCa
 
                         try {
                             schedule = jsonResponse.getJSONObject(i);
+
+                            int schedule_start_time = schedule.getInt("start_time");
+                            Log.i(LOG_TAG, "start_time: " + schedule_start_time);
+
+                            RemoilerDbHelper dbHelper = new RemoilerDbHelper(getActivity());
+                            SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+
+
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
 
-                    /*RemoilerDbHelper dbHelper = new RemoilerDbHelper(getActivity());
-                    SQLiteDatabase db = dbHelper.getReadableDatabase();*/
+
                 }
             }
         }

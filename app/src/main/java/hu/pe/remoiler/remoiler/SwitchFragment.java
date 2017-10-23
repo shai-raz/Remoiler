@@ -96,7 +96,7 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
             public void onClick(View v) {
                 changeStatus();
                 vibe.vibrate(20);
-                setButtonByStatus();
+//                setButtonByStatus();
             }
         });
 
@@ -212,6 +212,7 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
             remoilerOfflineDialog.show();
         } else {
             setStatus(status);
+            // TODO: test is this status is actually the new status (probably not)
             setButtonByStatus();
         }
     }
@@ -227,5 +228,6 @@ public class SwitchFragment extends Fragment implements LoaderManager.LoaderCall
         loadingDialog.dismiss();
         if (mResponse)
             mStatus = 1 - mStatus;
+        setButtonByStatus();
     }
 }

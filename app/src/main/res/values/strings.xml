@@ -25,6 +25,9 @@
     <string name="boiler_editor_hint_key">Key</string>
     <string name="boiler_editor_error_fill_all_fields">Please fill in all fields.</string>
     <string name="boiler_editor_menu_save">save</string>
+    <string name="boiler_editor_insert_successful">Boiler saved</string>
+    <string name="boiler_editor_insert_failed">Error with saving boiler</string>
+
 
     <!-- Boiler Activity -->
     <string name="boiler_error_no_internet_connection">No internet connection!</string>
